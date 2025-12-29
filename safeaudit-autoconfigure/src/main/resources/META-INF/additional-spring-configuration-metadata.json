@@ -1,0 +1,130 @@
+{
+  "properties": [
+    {
+      "name": "audit.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable or disable the audit framework.",
+      "defaultValue": true
+    },
+    {
+      "name": "audit.capture.http.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable HTTP request/response capture.",
+      "defaultValue": true
+    },
+    {
+      "name": "audit.capture.http.include-request-body",
+      "type": "java.lang.Boolean",
+      "description": "Include request body in audit logs.",
+      "defaultValue": true
+    },
+    {
+      "name": "audit.capture.http.include-response-body",
+      "type": "java.lang.Boolean",
+      "description": "Include response body in audit logs.",
+      "defaultValue": false
+    },
+    {
+      "name": "audit.capture.http.max-body-size",
+      "type": "java.lang.Integer",
+      "description": "Maximum size of request/response body to capture (bytes).",
+      "defaultValue": 10240
+    },
+    {
+      "name": "audit.processing.mode",
+      "type": "io.safeaudit.core.config.AuditProperties$ProcessingMode",
+      "description": "Processing mode: SYNC or ASYNC.",
+      "defaultValue": "ASYNC"
+    },
+    {
+      "name": "audit.processing.async.queue-capacity",
+      "type": "java.lang.Integer",
+      "description": "Capacity of async processing queue.",
+      "defaultValue": 10000
+    },
+    {
+      "name": "audit.processing.async.worker-threads",
+      "type": "java.lang.Integer",
+      "description": "Number of worker threads for async processing.",
+      "defaultValue": 4
+    },
+    {
+      "name": "audit.processing.compliance.pii-masking.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable PII masking in audit logs.",
+      "defaultValue": true
+    },
+    {
+      "name": "audit.processing.compliance.pii-masking.strategy",
+      "type": "io.safeaudit.core.config.AuditProperties$PIIMaskingStrategy",
+      "description": "PII masking strategy: HASH, MASK, or REDACT.",
+      "defaultValue": "HASH"
+    },
+    {
+      "name": "audit.storage.type",
+      "type": "io.safeaudit.core.config.AuditProperties$StorageType",
+      "description": "Storage type: DATABASE or FILE.",
+      "defaultValue": "DATABASE"
+    },
+    {
+      "name": "audit.storage.database.auto-create-schema",
+      "type": "java.lang.Boolean",
+      "description": "Automatically create audit tables on startup".,
+      "defaultValue": true
+    },
+    {
+      "name": "audit.storage.database.partitioning.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable table partitioning.",
+      "defaultValue": true
+    },
+    {
+      "name": "audit.storage.database.partitioning.strategy",
+      "type": "io.safeaudit.core.config.AuditProperties$PartitionStrategy",
+      "description": "Partitioning strategy: DAILY, MONTHLY, or YEARLY.",
+      "defaultValue": "MONTHLY"
+    },
+    {
+      "name": "audit.storage.database.retention.default-days",
+      "type": "java.lang.Integer",
+      "description": "Default retention period in days.",
+      "defaultValue": 2555
+    },
+    {
+      "name": "audit.reporting.api.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable audit REST API.",
+      "defaultValue": true
+    },
+    {
+      "name": "audit.reporting.api.base-path",
+      "type": "java.lang.String",
+      "description": "Base path for audit API endpoints.",
+      "defaultValue": "/audit"
+    },
+    {
+      "name": "audit.reporting.ui.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable audit dashboard UI.",
+      "defaultValue": true
+    },
+    {
+      "name": "audit.reporting.ui.path",
+      "type": "java.lang.String",
+      "description": "Path for audit dashboard.",
+      "defaultValue": "/audit/dashboard"
+    },
+    {
+      "name": "audit.integrity.hashing.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable hash chaining for tamper detection.",
+      "defaultValue": true
+    },
+    {
+      "name": "audit.integrity.hashing.algorithm",
+      "type": "java.lang.String",
+      "description": "Hashing algorithm.",
+      "defaultValue": "SHA-256"
+    }
+  ]
+}
