@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -40,8 +41,8 @@ public class PIIMasker implements AuditEventProcessor {
         var maskedRequest = maskPayload(event.requestPayload());
         var maskedResponse = maskPayload(event.responsePayload());
 
-        if (maskedRequest.equals(event.requestPayload()) &&
-                maskedResponse.equals(event.responsePayload())) {
+        if (Objects.equals(maskedRequest, event.requestPayload()) &&
+                Objects.equals(maskedResponse, event.responsePayload())) {
             return event;
         }
 

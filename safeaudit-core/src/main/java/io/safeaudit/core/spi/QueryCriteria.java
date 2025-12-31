@@ -111,7 +111,7 @@ public final class QueryCriteria {
         private Instant to;
         private int page = 0;
         private int size = 50;
-        private String sortBy = "timestamp";
+        private String sortBy = "event_timestamp";
         private SortDirection sortDirection = SortDirection.DESC;
 
         public Builder eventId(String eventId) {

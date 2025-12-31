@@ -65,17 +65,20 @@ public class HashCalculator implements AuditEventProcessor {
     private String calculateHash(AuditEvent event, String previousHash) {
         var content = new StringBuilder();
 
+        content.append(event.eventId());
         content.append(event.eventHash());
         content.append(event.timestamp());
         content.append(event.eventType());
         content.append(event.userId());
         content.append(event.resource());
         content.append(event.action());
+        content.append(event.sessionId());
 
         if (previousHash != null) {
             content.append(previousHash);
         }
 
+        digest.reset();
         byte[] hash = digest.digest(content.toString().getBytes(StandardCharsets.UTF_8));
         return Base64.getEncoder().encodeToString(hash);
     }
