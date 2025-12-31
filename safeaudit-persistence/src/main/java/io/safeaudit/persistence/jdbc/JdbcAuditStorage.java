@@ -19,6 +19,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.NonNull;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -47,7 +48,7 @@ public class JdbcAuditStorage implements AuditStorage {
     public JdbcAuditStorage(DataSource dataSource, SqlDialect dialect, String tableName) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.dialect = dialect;
-        this.tableName = tableName;
+        this.tableName = SqlTableRegistry.resolve(tableName);
         this.rowMapper = new AuditEventRowMapper();
     }
 
@@ -79,7 +80,7 @@ public class JdbcAuditStorage implements AuditStorage {
 
             int[] results = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
                 @Override
-                public void setValues(PreparedStatement ps, int i) throws SQLException {
+                public void setValues(@NonNull PreparedStatement ps, int i) throws SQLException {
                     setParameters(ps, events.get(i));
                 }
 
@@ -103,7 +104,7 @@ public class JdbcAuditStorage implements AuditStorage {
         try {
             var sql = dialect.selectByIdSQL(tableName);
             List<AuditEvent> results = jdbcTemplate.query(sql, rowMapper, UUID.fromString(eventId));
-            return results.isEmpty() ? Optional.empty() : Optional.of(results.getFirst());
+            return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
         } catch (DataAccessException e) {
             throw new AuditStorageException("Failed to find event: " + eventId, e);
         }
@@ -116,7 +117,7 @@ public class JdbcAuditStorage implements AuditStorage {
             var sql = builder.buildSelectSQL();
             Object[] params = builder.getParameters();
 
-            return jdbcTemplate.query(sql, rowMapper, params);
+            return jdbcTemplate.query(sql, ps -> setQueryParameters(ps, params), rowMapper);
         } catch (DataAccessException e) {
             throw new AuditStorageException("Failed to query events", e);
         }
@@ -129,14 +130,16 @@ public class JdbcAuditStorage implements AuditStorage {
             var sql = builder.buildCountSQL();
             Object[] params = builder.getParameters();
 
-            var count = jdbcTemplate.queryForObject(sql, Long.class, params);
-            return count != null ? count : 0L;
+            List<Long> results = jdbcTemplate.query(sql, ps -> setQueryParameters(ps, params),
+                    (rs, rowNum) -> rs.getLong(1));
+            return results.isEmpty() ? 0L : results.get(0);
         } catch (DataAccessException e) {
             throw new AuditStorageException("Failed to count events", e);
         }
     }
 
     @Override
+    @SuppressWarnings("java:S2077")
     public IntegrityReport verifyIntegrity(Instant from, Instant to) {
         try {
             String sql = """
@@ -170,7 +173,7 @@ public class JdbcAuditStorage implements AuditStorage {
                 }
 
                 previousHash[0] = eventHash;
-            }, from, to);
+            }, Timestamp.from(from), Timestamp.from(to));
 
             return new IntegrityReport(
                     violations.isEmpty(),
@@ -186,6 +189,7 @@ public class JdbcAuditStorage implements AuditStorage {
     }
 
     @Override
+    @SuppressWarnings("java:S2077")
     public void initializeSchema() {
         try {
             log.info("Initializing audit schema for table: {}", tableName);
@@ -240,7 +244,7 @@ public class JdbcAuditStorage implements AuditStorage {
         ps.setObject(idx++, event.httpStatusCode());
 
         // Compliance metadata
-        ComplianceMetadata compliance = event.compliance();
+        var compliance = event.compliance();
         ps.setString(idx++, String.join(",", compliance.regulatoryTags()));
         ps.setString(idx++, compliance.dataClassification().name());
         ps.setDate(idx++, compliance.retentionUntil() != null ?
@@ -253,6 +257,12 @@ public class JdbcAuditStorage implements AuditStorage {
         ps.setString(idx++, event.capturedBy());
         ps.setString(idx++, event.applicationName());
         ps.setString(idx++, event.applicationInstance());
+    }
+
+    private void setQueryParameters(PreparedStatement ps, Object[] params) throws SQLException {
+        for (int i = 0; i < params.length; i++) {
+            ps.setObject(i + 1, params[i]);
+        }
     }
 
     private boolean isTransient(DataAccessException e) {
@@ -318,103 +328,4 @@ public class JdbcAuditStorage implements AuditStorage {
         }
     }
 
-    /**
-     * Helper class for building dynamic SQL queries.
-     */
-    private static class QueryBuilder {
-
-        private final QueryCriteria criteria;
-        private final SqlDialect dialect;
-        private final String tableName;
-        private final List<Object> parameters = new ArrayList<>();
-        private final StringBuilder whereClause = new StringBuilder();
-
-        public QueryBuilder(QueryCriteria criteria, SqlDialect dialect, String tableName) {
-            this.criteria = criteria;
-            this.dialect = dialect;
-            this.tableName = tableName;
-            buildWhereClause();
-        }
-
-        private void buildWhereClause() {
-            boolean first = true;
-
-            if (criteria.getEventId() != null) {
-                appendCondition("event_id = ?", criteria.getEventId(), first);
-                first = false;
-            }
-
-            if (criteria.getUserId() != null) {
-                appendCondition("user_id = ?", criteria.getUserId(), first);
-                first = false;
-            }
-
-            if (criteria.getUsername() != null) {
-                appendCondition("username LIKE ?", "%" + criteria.getUsername() + "%", first);
-                first = false;
-            }
-
-            if (criteria.getResource() != null) {
-                appendCondition("resource LIKE ?", "%" + criteria.getResource() + "%", first);
-                first = false;
-            }
-
-            if (criteria.getEventType() != null) {
-                appendCondition("event_type = ?", criteria.getEventType(), first);
-                first = false;
-            }
-
-            if (criteria.getTenantId() != null) {
-                appendCondition("tenant_id = ?", criteria.getTenantId(), first);
-                first = false;
-            }
-
-            if (criteria.getFrom() != null) {
-                appendCondition("event_timestamp >= ?", Timestamp.from(criteria.getFrom()), first);
-                first = false;
-            }
-
-            if (criteria.getTo() != null) {
-                appendCondition("event_timestamp <= ?", Timestamp.from(criteria.getTo()), first);
-                first = false;
-            }
-
-            if (!criteria.getSeverities().isEmpty()) {
-                var placeholders = String.join(",",
-                        Collections.nCopies(criteria.getSeverities().size(), "?"));
-                appendCondition("severity IN (" + placeholders + ")", null, first);
-                criteria.getSeverities().forEach(s -> parameters.add(s.name()));
-            }
-        }
-
-        private void appendCondition(String condition, Object value, boolean first) {
-            if (!first) {
-                whereClause.append(" AND ");
-            }
-            whereClause.append(condition);
-            if (value != null) {
-                parameters.add(value);
-            }
-        }
-
-        public String buildSelectSQL() {
-            var orderBy = criteria.getSortBy() + " " + criteria.getSortDirection().name();
-            return dialect.selectSQL(
-                    tableName,
-                    whereClause.toString(),
-                    orderBy,
-                    criteria.getSize(),
-                    criteria.getPage() * criteria.getSize()
-            );
-        }
-
-        public String buildCountSQL() {
-            return dialect.countSQL(tableName, !whereClause.isEmpty()) +
-                    (whereClause.isEmpty() ? "" : " " + whereClause);
-        }
-
-        public Object[] getParameters() {
-            return parameters.toArray();
-        }
-    }
 }

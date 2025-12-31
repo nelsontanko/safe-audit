@@ -22,7 +22,11 @@ public class RetentionPolicy {
     private final String tableName;
 
     public RetentionPolicy(DataSource dataSource, AuditProperties properties) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this(new JdbcTemplate(dataSource), properties);
+    }
+
+    RetentionPolicy(JdbcTemplate jdbcTemplate, AuditProperties properties) {
+        this.jdbcTemplate = jdbcTemplate;
         this.config = properties.getStorage().getDatabase().getRetention();
         this.tableName = DEFAULT_TABLE_NAME;
     }
@@ -32,6 +36,7 @@ public class RetentionPolicy {
      * Runs weekly on Sunday at 3 AM.
      */
     @Scheduled(cron = "0 0 3 ? * SUN")
+    @SuppressWarnings("java:S2077")
     public void archiveOldData() {
         if (!config.isEnabled() || !config.isArchivalEnabled()) {
             return;
@@ -72,6 +77,7 @@ public class RetentionPolicy {
     /**
      * Delete data beyond retention period (use with caution).
      */
+    @SuppressWarnings("java:S2077")
     public int purgeExpiredData() {
         if (!config.isEnabled()) {
             return 0;

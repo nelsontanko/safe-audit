@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * Manages table partitioning for audit events.
@@ -31,7 +32,14 @@ public class PartitionManager {
             DataSource dataSource,
             SqlDialect dialect,
             AuditProperties properties) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this(new JdbcTemplate(dataSource), dialect, properties);
+    }
+
+    PartitionManager(
+            JdbcTemplate jdbcTemplate,
+            SqlDialect dialect,
+            AuditProperties properties) {
+        this.jdbcTemplate = jdbcTemplate;
         this.dialect = dialect;
         this.config = properties.getStorage().getDatabase().getPartitioning();
         this.tableName = DEFAULT_TABLE_NAME;
@@ -119,6 +127,7 @@ public class PartitionManager {
     /**
      * Check if partition exists.
      */
+    @SuppressWarnings("java:S2077")
     private boolean partitionExists(String partitionName) {
         try {
             String sql = switch (dialect.getDatabaseType()) {
@@ -137,18 +146,23 @@ public class PartitionManager {
                 return false;
             }
 
-            var count = jdbcTemplate.queryForObject(
-                    sql,
-                    Long.class,
-                    dialect.getDatabaseType().equals("MySQL") ?
-                            new Object[]{tableName, partitionName} :
-                            new Object[]{partitionName}
-            );
+            Object[] params = dialect.getDatabaseType().equals("MySQL") ?
+                    new Object[]{tableName, partitionName} :
+                    new Object[]{partitionName};
 
-            return count != null && count > 0;
+            List<Long> results = jdbcTemplate.query(sql, ps -> setQueryParameters(ps, params),
+                    (rs, rowNum) -> rs.getLong(1));
+
+            return !results.isEmpty() && results.get(0) > 0;
         } catch (Exception e) {
             log.warn("Failed to check partition existence: {}", e.getMessage());
             return false;
+        }
+    }
+
+    private void setQueryParameters(java.sql.PreparedStatement ps, Object[] params) throws java.sql.SQLException {
+        for (int i = 0; i < params.length; i++) {
+            ps.setObject(i + 1, params[i]);
         }
     }
 

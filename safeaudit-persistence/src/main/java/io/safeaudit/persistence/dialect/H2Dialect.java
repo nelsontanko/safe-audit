@@ -60,7 +60,7 @@ public class H2Dialect implements SqlDialect {
     @Override
     public String insertSQL(String tableName) {
         return """
-                MERGE INTO %s (
+                INSERT INTO %s (
                     event_id, sequence_number, event_timestamp, event_type, severity,
                     user_id, username, ip_address, user_agent,
                     resource, action, session_id, tenant_id,
@@ -68,7 +68,7 @@ public class H2Dialect implements SqlDialect {
                     compliance_tags, data_classification, retention_until, contains_pii,
                     previous_event_hash, event_hash,
                     captured_by, application_name, application_instance
-                ) KEY(event_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """.formatted(tableName);
     }
 
