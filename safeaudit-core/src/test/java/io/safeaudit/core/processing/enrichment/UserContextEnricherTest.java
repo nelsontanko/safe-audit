@@ -43,7 +43,7 @@ class UserContextEnricherTest {
         // Given
         AuditContext.set(AuditContext.USER_ID, "context-user");
 
-        AuditEvent event = AuditEvent.builder()
+        var event = AuditEvent.builder()
                 .eventId("test-123")
                 .timestamp(Instant.now())
                 .eventType("TEST")
