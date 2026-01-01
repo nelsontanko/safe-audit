@@ -45,7 +45,7 @@ public class AuditQueryController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant to,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size,
-            @RequestParam(defaultValue = "timestamp") String sortBy,
+            @RequestParam(defaultValue = "event_timestamp") String sortBy,
             @RequestParam(defaultValue = "DESC") QueryCriteria.SortDirection sortDirection) {
 
         // Validate and sanitize inputs

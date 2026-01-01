@@ -32,10 +32,10 @@ public class CSVExporter {
     public byte[] export(List<AuditEvent> events) {
         var outputStream = new ByteArrayOutputStream();
 
-        try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
+        try (var writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
              var csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader(HEADERS))) {
 
-            for (AuditEvent event : events) {
+            for (var event : events) {
                 csvPrinter.printRecord(
                         event.eventId(),
                         event.timestamp(),

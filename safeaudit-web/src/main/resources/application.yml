@@ -1,0 +1,4 @@
+audit:
+  reporting:
+    api:
+      base-path: /audit

@@ -16,6 +16,8 @@ import org.springframework.core.Ordered;
 
 import java.time.Instant;
 
+import static io.safeaudit.core.domain.enums.AuditSeverity.CRITICAL;
+
 /**
  * AOP interceptor for @Audited annotation.
  * Captures method execution details
@@ -98,7 +100,7 @@ public class AuditMethodInterceptor implements Ordered {
                 .eventId(idGenerator.generate())
                 .timestamp(startTime)
                 .eventType(eventType)
-                .severity(exception != null ? io.safeaudit.core.domain.enums.AuditSeverity.CRITICAL : audited.severity())
+                .severity(exception != null ? CRITICAL : audited.severity())
                 .resource(resource)
                 .action(signature.getName())
                 .requestPayload(requestPayload)
