@@ -136,7 +136,7 @@ public class AuditProcessingAutoConfiguration {
         var asyncConfig = properties.getProcessing().getAsync();
         var backpressureConfig = properties.getPerformance().getBackpressure();
 
-        BackpressureHandler backpressureHandler = new BackpressureHandler(
+        var backpressureHandler = new BackpressureHandler(
                 backpressureConfig.getStrategy(),
                 backpressureConfig.getThreshold()
         );

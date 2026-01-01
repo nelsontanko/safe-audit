@@ -23,7 +23,7 @@ import javax.sql.DataSource;
  * @author Nelson Tanko
  */
 @AutoConfiguration
-@ConditionalOnProperty(prefix = "ng-audit.storage", name = "type", havingValue = "DATABASE", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "audit.storage", name = "type", havingValue = "DATABASE", matchIfMissing = true)
 @ConditionalOnBean(DataSource.class)
 @EnableScheduling
 public class AuditStorageAutoConfiguration {
@@ -60,7 +60,7 @@ public class AuditStorageAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "ng-audit.storage.database.partitioning", name = "enabled", havingValue = "true")
+    @ConditionalOnProperty(prefix = "audit.storage.database.partitioning", name = "enabled", havingValue = "true")
     public PartitionManager partitionManager(
             DataSource dataSource,
             AuditStorage storage,
@@ -75,7 +75,7 @@ public class AuditStorageAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "ng-audit.storage.database.retention", name = "enabled", havingValue = "true")
+    @ConditionalOnProperty(prefix = "audit.storage.database.retention", name = "enabled", havingValue = "true")
     public RetentionPolicy retentionPolicy(DataSource dataSource, AuditProperties properties) {
         return new RetentionPolicy(dataSource, properties);
     }

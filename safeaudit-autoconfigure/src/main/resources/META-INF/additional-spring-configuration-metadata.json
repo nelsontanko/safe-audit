@@ -69,7 +69,7 @@
     {
       "name": "audit.storage.database.auto-create-schema",
       "type": "java.lang.Boolean",
-      "description": "Automatically create audit tables on startup".,
+      "description": "Automatically create audit tables on startup.",
       "defaultValue": true
     },
     {
