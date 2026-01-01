@@ -8,7 +8,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>safe-audit-core</name>
+    <name>safe-audit-parent</name>
     <description>
         Regulatory audit logging framework for Spring Boot applications
         with Nigerian regulatory compliance support (CBN, NDPA)
