@@ -3,12 +3,20 @@ package io.safeaudit.core.processing.enrichment;
 import io.safeaudit.core.domain.AuditContext;
 import io.safeaudit.core.domain.AuditEvent;
 import io.safeaudit.core.spi.AuditEventProcessor;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.ClassUtils;
 
 /**
  * @author Nelson Tanko
  */
 public class UserContextEnricher implements AuditEventProcessor {
+
+    private static final Logger log = LoggerFactory.getLogger(UserContextEnricher.class);
+    private static final boolean SPRING_SECURITY_PRESENT = ClassUtils.isPresent(
+            "org.springframework.security.core.context.SecurityContextHolder",
+            UserContextEnricher.class.getClassLoader()
+    );
 
     @Override
     public AuditEvent process(AuditEvent event) {
@@ -61,20 +69,45 @@ public class UserContextEnricher implements AuditEventProcessor {
     }
 
     private String getUserIdFromSecurity() {
-        try {
-            var auth = SecurityContextHolder.getContext().getAuthentication();
-            if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
-                return auth.getName();
-            }
-        } catch (Exception _) {
-            // Spring Security not available or not configured
+        if (!SPRING_SECURITY_PRESENT) {
+            return null;
         }
-        return null;
+        try {
+            return SecurityAccess.getUserId();
+        } catch (Throwable t) {
+            log.trace("Failed to extract user ID from Spring Security", t);
+            return null;
+        }
     }
 
     private String getUsernameFromSecurity() {
+        if (!SPRING_SECURITY_PRESENT) {
+            return null;
+        }
         try {
-            var auth = SecurityContextHolder.getContext().getAuthentication();
+            return SecurityAccess.getUsername();
+        } catch (Throwable t) {
+            log.trace("Failed to extract username from Spring Security", t);
+            return null;
+        }
+    }
+
+    /**
+     * Inner class to isolate Spring Security dependency.
+     * This class will only be loaded if SPRING_SECURITY_PRESENT is true
+     * and one of its methods is called.
+     */
+    private static class SecurityAccess {
+        static String getUserId() {
+            var auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+                return auth.getName();
+            }
+            return null;
+        }
+
+        static String getUsername() {
+            var auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
             if (auth != null && auth.isAuthenticated()) {
                 Object principal = auth.getPrincipal();
                 if (principal instanceof String username) {
@@ -82,10 +115,8 @@ public class UserContextEnricher implements AuditEventProcessor {
                 }
                 return principal.toString();
             }
-        } catch (Exception e) {
-            // Spring Security not available
+            return null;
         }
-        return null;
     }
 
     @Override

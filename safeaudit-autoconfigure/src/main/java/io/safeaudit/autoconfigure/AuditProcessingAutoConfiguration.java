@@ -32,7 +32,6 @@ import java.util.concurrent.BlockingQueue;
  * @author Nelson Tanko
  */
 @AutoConfiguration
-@ConditionalOnBean(AuditStorage.class)
 public class AuditProcessingAutoConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(AuditProcessingAutoConfiguration.class);

@@ -18,7 +18,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * @author Nelson Tanko
@@ -26,6 +29,9 @@ import org.springframework.context.annotation.Import;
 @AutoConfiguration
 @ConditionalOnProperty(prefix = "audit", name = "enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(AuditProperties.class)
+@EnableAspectJAutoProxy
+@EnableAsync
+@EnableScheduling
 @Import({
         AuditCaptureAutoConfiguration.class,
         AuditProcessingAutoConfiguration.class,
@@ -41,7 +47,6 @@ public class AuditAutoConfiguration {
      * Event ID generator (UUIDv7 for time-ordered IDs).
      */
     @Bean
-    @ConditionalOnMissingBean
     public AuditEventIdGenerator auditEventIdGenerator() {
         return new UUIDv7Generator();
     }
@@ -50,7 +55,6 @@ public class AuditAutoConfiguration {
      * Sequence number generator for events.
      */
     @Bean
-    @ConditionalOnMissingBean
     public SequenceNumberGenerator sequenceNumberGenerator() {
         return new SequenceNumberGenerator();
     }
@@ -59,7 +63,6 @@ public class AuditAutoConfiguration {
      * Metrics registry for audit framework.
      */
     @Bean
-    @ConditionalOnMissingBean
     @ConditionalOnClass(name = "io.micrometer.core.instrument.MeterRegistry")
     public AuditMetrics auditMetrics(MeterRegistry meterRegistry) {
         return new AuditMetrics(meterRegistry);

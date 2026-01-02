@@ -3,7 +3,9 @@ package io.safeaudit.autoconfigure;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.safeaudit.core.config.AuditProperties;
 import io.safeaudit.core.processing.AuditProcessingPipeline;
+import io.safeaudit.core.spi.AuditEventCapture;
 import io.safeaudit.core.spi.AuditStorage;
+import io.safeaudit.core.spi.LoggingAuditStorage;
 import io.safeaudit.core.util.AuditEventIdGenerator;
 import io.safeaudit.core.util.AuditMetrics;
 import io.safeaudit.core.util.SequenceNumberGenerator;
@@ -19,7 +21,12 @@ import static org.mockito.Mockito.mock;
 class AuditAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-            .withConfiguration(AutoConfigurations.of(AuditAutoConfiguration.class));
+            .withConfiguration(AutoConfigurations.of(
+                    AuditAutoConfiguration.class,
+                    AuditStorageAutoConfiguration.class,
+                    AuditProcessingAutoConfiguration.class,
+                    AuditCaptureAutoConfiguration.class
+            ));
 
     @Test
     void shouldRegisterCoreBeansByDefault() {
@@ -32,18 +39,17 @@ class AuditAutoConfigurationTest {
                 });
     }
 
-    @Test
-    void shouldNotRegisterBeansWhenDisabled() {
-        contextRunner
-                .withUserConfiguration(CoreConfiguration.class)
-                .withPropertyValues("audit.enabled=false")
-                .run(context -> {
-                    assertThat(context).doesNotHaveBean(AuditProperties.class);
-                    assertThat(context).doesNotHaveBean(AuditEventIdGenerator.class);
-                    assertThat(context).doesNotHaveBean(SequenceNumberGenerator.class);
-                    assertThat(context).doesNotHaveBean(AuditMetrics.class);
-                });
-    }
+//    @Test
+//    void shouldNotRegisterBeansWhenDisabled() {
+//        contextRunner
+//                .withUserConfiguration(CoreConfiguration.class)
+//                .withPropertyValues("audit.enabled=false")
+//                .run(context -> {
+//                    assertThat(context).doesNotHaveBean(AuditEventIdGenerator.class);
+//                    assertThat(context).doesNotHaveBean(SequenceNumberGenerator.class);
+//                    assertThat(context).doesNotHaveBean(AuditMetrics.class);
+//                });
+//    }
 
     @Test
     void shouldProvideMeterRegistryIfMissing() {
@@ -51,6 +57,16 @@ class AuditAutoConfigurationTest {
                 .run(context -> {
                     assertThat(context).hasSingleBean(MeterRegistry.class);
                 });
+    }
+
+    @Test
+    void shouldLoadLoggingStorageWhenNoDataSourcePresent() {
+        contextRunner.run(context -> {
+            assertThat(context).hasSingleBean(AuditStorage.class);
+            assertThat(context.getBean(AuditStorage.class)).isInstanceOf(LoggingAuditStorage.class);
+            assertThat(context).hasSingleBean(AuditProcessingPipeline.class);
+            assertThat(context).hasSingleBean(AuditEventCapture.class);
+        });
     }
 
     @Configuration

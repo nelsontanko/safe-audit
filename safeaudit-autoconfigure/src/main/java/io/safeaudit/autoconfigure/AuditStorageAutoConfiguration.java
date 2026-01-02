@@ -23,21 +23,28 @@ import javax.sql.DataSource;
  * @author Nelson Tanko
  */
 @AutoConfiguration
-@ConditionalOnProperty(prefix = "audit.storage", name = "type", havingValue = "DATABASE", matchIfMissing = true)
-@ConditionalOnBean(DataSource.class)
 @EnableScheduling
 public class AuditStorageAutoConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(AuditStorageAutoConfiguration.class);
 
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnBean(DataSource.class)
+    @ConditionalOnProperty(prefix = "audit.storage", name = "type", havingValue = "DATABASE", matchIfMissing = true)
+    public AuditStorage jdbcAuditStorage(DataSource dataSource, AuditProperties properties) {
+        log.info("Creating JDBC audit storage");
+        return AuditStorageFactory.create(dataSource, properties);
+    }
+
     /**
-     * Create audit storage from available DataSource.
+     * Fallback audit storage when database is not available.
      */
     @Bean
     @ConditionalOnMissingBean
-    public AuditStorage auditStorage(DataSource dataSource, AuditProperties properties) {
-        log.info("Creating JDBC audit storage");
-        return AuditStorageFactory.create(dataSource, properties);
+    public AuditStorage loggingAuditStorage() {
+        log.info("Creating fallback Logging audit storage");
+        return new io.safeaudit.core.spi.LoggingAuditStorage();
     }
 
     /**
@@ -45,6 +52,7 @@ public class AuditStorageAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnBean(DataSource.class)
     public SchemaManager schemaManager(
             DataSource dataSource,
             AuditStorage storage,
@@ -60,6 +68,7 @@ public class AuditStorageAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnBean(DataSource.class)
     @ConditionalOnProperty(prefix = "audit.storage.database.partitioning", name = "enabled", havingValue = "true")
     public PartitionManager partitionManager(
             DataSource dataSource,
@@ -75,6 +84,7 @@ public class AuditStorageAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnBean(DataSource.class)
     @ConditionalOnProperty(prefix = "audit.storage.database.retention", name = "enabled", havingValue = "true")
     public RetentionPolicy retentionPolicy(DataSource dataSource, AuditProperties properties) {
         return new RetentionPolicy(dataSource, properties);
@@ -84,6 +94,7 @@ public class AuditStorageAutoConfiguration {
      * Initialize schema on startup.
      */
     @Bean
+    @ConditionalOnBean(SchemaManager.class)
     public ApplicationRunner schemaInitializer(SchemaManager schemaManager) {
         return args -> {
             log.info("Initializing audit schema...");

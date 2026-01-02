@@ -14,7 +14,6 @@ import java.util.Set;
 /**
  * @author Nelson Tanko
  */
-@EnableConfigurationProperties(AuditProperties.class)
 @ConfigurationProperties(prefix = "audit")
 public class AuditProperties {
 
