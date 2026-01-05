@@ -32,9 +32,17 @@ public class AuditStorageAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnBean(DataSource.class)
     @ConditionalOnProperty(prefix = "audit.storage", name = "type", havingValue = "DATABASE", matchIfMissing = true)
-    public AuditStorage jdbcAuditStorage(DataSource dataSource, AuditProperties properties) {
-        log.info("Creating JDBC audit storage");
-        return AuditStorageFactory.create(dataSource, properties);
+    public AuditStorage jdbcAuditStorage(DataSource dataSource, SqlDialect dialect, AuditProperties properties) {
+        log.info("Initializing JDBC audit storage with dialect: {}", dialect.getDatabaseType());
+        return new io.safeaudit.persistence.jdbc.JdbcAuditStorage(dataSource, dialect);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean({SqlDialect.class, AuditStorage.class})
+    @ConditionalOnBean(DataSource.class)
+    @ConditionalOnProperty(prefix = "audit.storage", name = "type", havingValue = "DATABASE", matchIfMissing = true)
+    public SqlDialect sqlDialect(DataSource dataSource, AuditProperties properties) {
+        return AuditStorageFactory.resolveDialect(dataSource, properties);
     }
 
     /**
@@ -52,14 +60,11 @@ public class AuditStorageAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnBean(DataSource.class)
+    @ConditionalOnBean({DataSource.class, SqlDialect.class})
     public SchemaManager schemaManager(
             DataSource dataSource,
-            AuditStorage storage,
+            SqlDialect dialect,
             AuditProperties properties) {
-
-        // Extract SQL dialect from storage implementation
-        var dialect = extractDialect(storage);
         return new SchemaManager(dataSource, dialect, properties);
     }
 
@@ -68,14 +73,13 @@ public class AuditStorageAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnBean(DataSource.class)
+    @ConditionalOnBean({DataSource.class, SqlDialect.class})
     @ConditionalOnProperty(prefix = "audit.storage.database.partitioning", name = "enabled", havingValue = "true")
     public PartitionManager partitionManager(
             DataSource dataSource,
-            AuditStorage storage,
+            SqlDialect dialect,
             AuditProperties properties) {
 
-        var dialect = extractDialect(storage);
         return new PartitionManager(dataSource, dialect, properties);
     }
 
@@ -94,11 +98,12 @@ public class AuditStorageAutoConfiguration {
      * Initialize schema on startup.
      */
     @Bean
-    @ConditionalOnBean(SchemaManager.class)
-    public ApplicationRunner schemaInitializer(SchemaManager schemaManager) {
+    public ApplicationRunner auditSchemaInitializer(AuditStorage storage, AuditProperties properties) {
         return args -> {
-            log.info("Initializing audit schema...");
-            schemaManager.initialize();
+            if (properties.getStorage().getDatabase().isAutoCreateSchema()) {
+                log.info("Checking audit storage schema...");
+                storage.initializeSchema();
+            }
         };
     }
 
@@ -114,14 +119,5 @@ public class AuditStorageAutoConfiguration {
         };
     }
 
-    private SqlDialect extractDialect(AuditStorage storage) {
-        // Use reflection to extract dialect from JdbcAuditStorage
-        try {
-            var field = storage.getClass().getDeclaredField("dialect");
-            field.setAccessible(true);
-            return (SqlDialect) field.get(storage);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to extract SQL dialect from storage", e);
-        }
-    }
+    // Dialect is now provided as a proper bean
 }

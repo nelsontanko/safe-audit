@@ -39,18 +39,6 @@ class AuditAutoConfigurationTest {
                 });
     }
 
-//    @Test
-//    void shouldNotRegisterBeansWhenDisabled() {
-//        contextRunner
-//                .withUserConfiguration(CoreConfiguration.class)
-//                .withPropertyValues("audit.enabled=false")
-//                .run(context -> {
-//                    assertThat(context).doesNotHaveBean(AuditEventIdGenerator.class);
-//                    assertThat(context).doesNotHaveBean(SequenceNumberGenerator.class);
-//                    assertThat(context).doesNotHaveBean(AuditMetrics.class);
-//                });
-//    }
-
     @Test
     void shouldProvideMeterRegistryIfMissing() {
         contextRunner.withUserConfiguration(CoreConfiguration.class)

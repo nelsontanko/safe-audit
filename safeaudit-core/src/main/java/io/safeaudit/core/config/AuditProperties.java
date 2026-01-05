@@ -3,7 +3,7 @@ package io.safeaudit.core.config;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -18,11 +18,17 @@ import java.util.Set;
 public class AuditProperties {
 
     private boolean enabled = true;
+    @NestedConfigurationProperty
     private CaptureConfig capture = new CaptureConfig();
+    @NestedConfigurationProperty
     private ProcessingConfig processing = new ProcessingConfig();
+    @NestedConfigurationProperty
     private StorageConfig storage = new StorageConfig();
+    @NestedConfigurationProperty
     private ReportingConfig reporting = new ReportingConfig();
+    @NestedConfigurationProperty
     private IntegrityConfig integrity = new IntegrityConfig();
+    @NestedConfigurationProperty
     private PerformanceConfig performance = new PerformanceConfig();
 
     public boolean isEnabled() {
@@ -82,8 +88,11 @@ public class AuditProperties {
     }
 
     public static class CaptureConfig {
+        @NestedConfigurationProperty
         private HttpCaptureConfig http = new HttpCaptureConfig();
+        @NestedConfigurationProperty
         private MethodCaptureConfig method = new MethodCaptureConfig();
+        @NestedConfigurationProperty
         private EventCaptureConfig event = new EventCaptureConfig();
 
         public HttpCaptureConfig getHttp() {
@@ -199,8 +208,11 @@ public class AuditProperties {
         @NotNull
         private ProcessingMode mode = ProcessingMode.ASYNC;
 
+        @NestedConfigurationProperty
         private AsyncConfig async = new AsyncConfig();
+        @NestedConfigurationProperty
         private EnrichmentConfig enrichment = new EnrichmentConfig();
+        @NestedConfigurationProperty
         private ComplianceConfig compliance = new ComplianceConfig();
 
         public ProcessingMode getMode() {
@@ -321,8 +333,10 @@ public class AuditProperties {
     }
 
     public static class ComplianceConfig {
+        @NestedConfigurationProperty
         private PIIMaskingConfig piiMasking = new PIIMaskingConfig();
         private Set<String> regulations = new HashSet<>();
+        @NestedConfigurationProperty
         private DataClassificationConfig dataClassification = new DataClassificationConfig();
 
         public PIIMaskingConfig getPiiMasking() {
@@ -407,6 +421,7 @@ public class AuditProperties {
 
     public static class StorageConfig {
         private StorageType type = StorageType.DATABASE;
+        @NestedConfigurationProperty
         private DatabaseConfig database = new DatabaseConfig();
 
         public StorageType getType() {
@@ -434,8 +449,11 @@ public class AuditProperties {
         private boolean autoCreateSchema = true;
         private String dialect = "AUTO";
         private boolean useApplicationDataSource = true;
+        @NestedConfigurationProperty
         private ConnectionConfig connection = new ConnectionConfig();
+        @NestedConfigurationProperty
         private PartitioningConfig partitioning = new PartitioningConfig();
+        @NestedConfigurationProperty
         private RetentionConfig retention = new RetentionConfig();
 
         public boolean isAutoCreateSchema() {
@@ -579,8 +597,11 @@ public class AuditProperties {
     }
 
     public static class ReportingConfig {
+        @NestedConfigurationProperty
         private ApiConfig api = new ApiConfig();
+        @NestedConfigurationProperty
         private UIConfig ui = new UIConfig();
+        @NestedConfigurationProperty
         private ExportConfig export = new ExportConfig();
 
         public ApiConfig getApi() {
@@ -611,6 +632,7 @@ public class AuditProperties {
     public static class ApiConfig {
         private boolean enabled = true;
         private String basePath = "/audit";
+        @NestedConfigurationProperty
         private SecurityConfig security = new SecurityConfig();
 
         public boolean isEnabled() {
@@ -711,7 +733,9 @@ public class AuditProperties {
     }
 
     public static class IntegrityConfig {
+        @NestedConfigurationProperty
         private HashingConfig hashing = new HashingConfig();
+        @NestedConfigurationProperty
         private VerificationConfig verification = new VerificationConfig();
 
         public HashingConfig getHashing() {
@@ -783,7 +807,9 @@ public class AuditProperties {
     }
 
     public static class PerformanceConfig {
+        @NestedConfigurationProperty
         private BackpressureConfig backpressure = new BackpressureConfig();
+        @NestedConfigurationProperty
         private CircuitBreakerConfig circuitBreaker = new CircuitBreakerConfig();
 
         public BackpressureConfig getBackpressure() {
