@@ -1,2 +1,3 @@
 io.safeaudit.autoconfigure.AuditAutoConfiguration
 io.safeaudit.autoconfigure.AuditStorageAutoConfiguration
+io.safeaudit.autoconfigure.AuditReportingAutoConfiguration

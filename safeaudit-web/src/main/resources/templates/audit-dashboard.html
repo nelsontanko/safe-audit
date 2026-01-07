@@ -1,271 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Audit Dashboard</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0f172a;
-            color: #e2e8f0;
-            padding: 2rem;
-        }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 2rem;
+      }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
 
-        header {
-            margin-bottom: 2rem;
-        }
+      header {
+        margin-bottom: 2rem;
+      }
 
-        h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+      h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
 
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
 
-        .stat-card {
-            background: #1e293b;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            border: 1px solid #334155;
-        }
+      .stat-card {
+        background: #1e293b;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        border: 1px solid #334155;
+      }
 
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
 
-        .stat-label {
-            color: #94a3b8;
-            font-size: 0.875rem;
-        }
+      .stat-label {
+        color: #94a3b8;
+        font-size: 0.875rem;
+      }
 
-        .filters {
-            background: #1e293b;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            margin-bottom: 2rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
+      .filters {
+        background: #1e293b;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
 
-        .filter-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
-            color: #94a3b8;
-        }
+      .filter-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        color: #94a3b8;
+      }
 
-        input, select {
-            width: 100%;
-            padding: 0.5rem;
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 0.375rem;
-            color: #e2e8f0;
-            font-size: 0.875rem;
-        }
+      input,
+      select {
+        width: 100%;
+        padding: 0.5rem;
+        background: #0f172a;
+        border: 1px solid #334155;
+        border-radius: 0.375rem;
+        color: #e2e8f0;
+        font-size: 0.875rem;
+      }
 
-        button {
-            padding: 0.5rem 1rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 0.375rem;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
+      button {
+        padding: 0.5rem 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 0.375rem;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
 
-        button:hover {
-            transform: translateY(-2px);
-        }
+      button:hover {
+        transform: translateY(-2px);
+      }
 
-        .table-container {
-            background: #1e293b;
-            border-radius: 0.5rem;
-            overflow: hidden;
-        }
+      .table-container {
+        background: #1e293b;
+        border-radius: 0.5rem;
+        overflow: hidden;
+      }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
 
-        th {
-            background: #0f172a;
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.875rem;
-            color: #94a3b8;
-            border-bottom: 1px solid #334155;
-        }
+      th {
+        background: #0f172a;
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: #94a3b8;
+        border-bottom: 1px solid #334155;
+      }
 
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid #334155;
-            font-size: 0.875rem;
-        }
+      td {
+        padding: 1rem;
+        border-bottom: 1px solid #334155;
+        font-size: 0.875rem;
+      }
 
-        tr:hover {
-            background: #0f172a;
-        }
+      tr:hover {
+        background: #0f172a;
+      }
 
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
+      .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
 
-        .badge-info {
-            background: #1e40af;
-            color: #dbeafe;
-        }
+      .badge-info {
+        background: #1e40af;
+        color: #dbeafe;
+      }
 
-        .badge-warn {
-            background: #b45309;
-            color: #fef3c7;
-        }
+      .badge-warn {
+        background: #b45309;
+        color: #fef3c7;
+      }
 
-        .badge-critical {
-            background: #991b1b;
-            color: #fecaca;
-        }
+      .badge-critical {
+        background: #991b1b;
+        color: #fecaca;
+      }
 
-        .pagination {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            margin-top: 1rem;
-        }
+      .pagination {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        margin-top: 1rem;
+      }
 
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: #94a3b8;
-        }
+      .loading {
+        text-align: center;
+        padding: 2rem;
+        color: #94a3b8;
+      }
     </style>
-</head>
-<body>
-<div class="container">
-    <header>
+  </head>
+  <body>
+    <div class="container">
+      <header>
         <h1>🔒 Audit Dashboard</h1>
-        <p style="color: #94a3b8;">Real-time audit log monitoring and reporting</p>
-    </header>
+        <p style="color: #94a3b8">
+          Real-time audit log monitoring and reporting
+        </p>
+      </header>
 
-    <div class="stats" id="statsContainer">
+      <div class="stats" id="statsContainer">
         <div class="stat-card">
-            <div class="stat-value" id="totalEvents">-</div>
-            <div class="stat-label">Total Events</div>
+          <div class="stat-value" id="totalEvents">-</div>
+          <div class="stat-label">Total Events</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value" id="infoCount">-</div>
-            <div class="stat-label">Info</div>
+          <div class="stat-value" id="infoCount">-</div>
+          <div class="stat-label">Info</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value" id="warnCount">-</div>
-            <div class="stat-label">Warnings</div>
+          <div class="stat-value" id="warnCount">-</div>
+          <div class="stat-label">Warnings</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value" id="criticalCount">-</div>
-            <div class="stat-label">Critical</div>
+          <div class="stat-value" id="criticalCount">-</div>
+          <div class="stat-label">Critical</div>
         </div>
-    </div>
+      </div>
 
-    <div class="filters">
+      <div class="filters">
         <div class="filter-group">
-            <label>User ID</label>
-            <input type="text" id="userId" placeholder="Filter by user...">
-        </div>
-        <div class="filter-group">
-            <label>Resource</label>
-            <input type="text" id="resource" placeholder="Filter by resource...">
+          <label>User ID</label>
+          <input type="text" id="userId" placeholder="Filter by user..." />
         </div>
         <div class="filter-group">
-            <label>From Date</label>
-            <input type="datetime-local" id="fromDate">
+          <label>Resource</label>
+          <input
+            type="text"
+            id="resource"
+            placeholder="Filter by resource..."
+          />
         </div>
         <div class="filter-group">
-            <label>To Date</label>
-            <input type="datetime-local" id="toDate">
+          <label>From Date</label>
+          <input type="datetime-local" id="fromDate" />
         </div>
-        <div class="filter-group" style="display: flex; align-items: flex-end; gap: 0.5rem;">
-            <button onclick="search()">Search</button>
-            <button onclick="exportPDF()">Export PDF</button>
-            <button onclick="exportCSV()">Export CSV</button>
+        <div class="filter-group">
+          <label>To Date</label>
+          <input type="datetime-local" id="toDate" />
         </div>
-    </div>
+        <div
+          class="filter-group"
+          style="display: flex; align-items: flex-end; gap: 0.5rem"
+        >
+          <button onclick="search()">Search</button>
+          <button onclick="exportPDF()">Export PDF</button>
+          <button onclick="exportCSV()">Export CSV</button>
+        </div>
+      </div>
 
-    <div class="table-container">
-        <div id="loading" class="loading" style="display: none;">Loading...</div>
+      <div class="table-container">
+        <div id="loading" class="loading" style="display: none">Loading...</div>
         <table id="auditTable">
-            <thead>
+          <thead>
             <tr>
-                <th>Timestamp</th>
-                <th>User</th>
-                <th>Action</th>
-                <th>Resource</th>
-                <th>Severity</th>
-                <th>Status</th>
+              <th>Timestamp</th>
+              <th>User</th>
+              <th>Action</th>
+              <th>Resource</th>
+              <th>Severity</th>
+              <th>Status</th>
             </tr>
-            </thead>
-            <tbody id="tableBody">
-            </tbody>
+          </thead>
+          <tbody id="tableBody"></tbody>
         </table>
+      </div>
+
+      <div class="pagination" id="pagination"></div>
     </div>
 
-    <div class="pagination" id="pagination"></div>
-</div>
+    <script>
+      const API_BASE = '/audit';
+      let currentPage = 0;
+      const pageSize = 50;
 
-<script>
-    const API_BASE = '/audit';
-    let currentPage = 0;
-    const pageSize = 50;
-
-    async function loadStats() {
+      async function loadStats() {
         try {
-            const response = await fetch(`${API_BASE}/stats`);
-            const stats = await response.json();
+          const response = await fetch(`${API_BASE}/stats`);
+          const stats = await response.json();
 
-            document.getElementById('totalEvents').textContent = stats.totalEvents;
-            document.getElementById('infoCount').textContent = stats.infoCount;
-            document.getElementById('warnCount').textContent = stats.warnCount;
-            document.getElementById('criticalCount').textContent = stats.criticalCount;
+          document.getElementById('totalEvents').textContent =
+            stats.totalEvents;
+          document.getElementById('infoCount').textContent = stats.infoCount;
+          document.getElementById('warnCount').textContent = stats.warnCount;
+          document.getElementById('criticalCount').textContent =
+            stats.criticalCount;
         } catch (error) {
-            console.error('Failed to load stats:', error);
+          console.error('Failed to load stats:', error);
         }
-    }
+      }
 
-    async function search(page = 0) {
+      async function search(page = 0) {
         currentPage = page;
         const params = new URLSearchParams({
-            page: page,
-            size: pageSize
+          page: page,
+          size: pageSize,
         });
 
         const userId = document.getElementById('userId').value;
@@ -281,91 +293,111 @@
         showLoading(true);
 
         try {
-            const response = await fetch(`${API_BASE}/events?${params}`);
-            const data = await response.json();
+          const response = await fetch(`${API_BASE}/events?${params}`);
+          const data = await response.json();
 
-            renderTable(data.content);
-            renderPagination(data);
+          renderTable(data.content);
+          renderPagination(data);
         } catch (error) {
-            console.error('Failed to load events:', error);
-            alert('Failed to load audit events');
+          console.error('Failed to load events:', error);
+          alert('Failed to load audit events');
         } finally {
-            showLoading(false);
+          showLoading(false);
         }
-    }
+      }
 
-    function renderTable(events) {
+      function renderTable(events) {
         const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = events.map(event => `
+        tbody.innerHTML = events
+          .map(
+            (event) => `
                 <tr>
                     <td>${new Date(event.timestamp).toLocaleString()}</td>
                     <td>${event.username || event.userId || 'N/A'}</td>
                     <td>${event.action}</td>
                     <td>${event.resource}</td>
-                    <td><span class="badge badge-${event.severity.toLowerCase()}">${event.severity}</span></td>
+                    <td><span class="badge badge-${event.severity.toLowerCase()}">${
+              event.severity
+            }</span></td>
                     <td>${event.httpStatusCode || 'N/A'}</td>
                 </tr>
-            `).join('');
-    }
+            `
+          )
+          .join('');
+      }
 
-    function renderPagination(data) {
+      function renderPagination(data) {
         const pagination = document.getElementById('pagination');
         const buttons = [];
 
         if (data.page > 0) {
-            buttons.push(`<button onclick="search(${data.page - 1})">Previous</button>`);
+          buttons.push(
+            `<button onclick="search(${data.page - 1})">Previous</button>`
+          );
         }
 
-        buttons.push(`<span style="padding: 0.5rem;">Page ${data.page + 1} of ${data.totalPages}</span>`);
+        buttons.push(
+          `<span style="padding: 0.5rem;">Page ${data.page + 1} of ${
+            data.totalPages
+          }</span>`
+        );
 
         if (data.hasNext) {
-            buttons.push(`<button onclick="search(${data.page + 1})">Next</button>`);
+          buttons.push(
+            `<button onclick="search(${data.page + 1})">Next</button>`
+          );
         }
 
         pagination.innerHTML = buttons.join('');
-    }
+      }
 
-    function showLoading(show) {
-        document.getElementById('loading').style.display = show ? 'block' : 'none';
-        document.getElementById('auditTable').style.display = show ? 'none' : 'table';
-    }
+      function showLoading(show) {
+        document.getElementById('loading').style.display = show
+          ? 'block'
+          : 'none';
+        document.getElementById('auditTable').style.display = show
+          ? 'none'
+          : 'table';
+      }
 
-    async function exportPDF() {
+      async function exportPDF() {
         const fromDate = document.getElementById('fromDate').value;
         const toDate = document.getElementById('toDate').value;
 
         if (!fromDate || !toDate) {
-            alert('Please select date range for export');
-            return;
+          alert('Please select date range for export');
+          return;
         }
 
         const from = new Date(fromDate).toISOString().split('T')[0];
         const to = new Date(toDate).toISOString().split('T')[0];
 
         globalThis.location.href = `${API_BASE}/export/pdf?from=${from}&to=${to}`;
-    }
+      }
 
-    async function exportCSV() {
+      async function exportCSV() {
         const fromDate = document.getElementById('fromDate').value;
         const toDate = document.getElementById('toDate').value;
 
         if (!fromDate || !toDate) {
-            alert('Please select date range for export');
-            return;
+          alert('Please select date range for export');
+          return;
         }
 
         const from = new Date(fromDate).toISOString().split('T')[0];
         const to = new Date(toDate).toISOString().split('T')[0];
 
         globalThis.location.href = `${API_BASE}/export/csv?from=${from}&to=${to}`;
-    }
+      }
 
-    // Initialize
-    await loadStats();
-    await search();
+      // Initialize on page load
+      (async function init() {
+        await loadStats();
+        await search();
 
-    // Auto-refresh stats every 30 seconds
-    setInterval(loadStats, 30000);
-</script>
-</body>
+        // Auto-refresh stats every 30 seconds
+        setInterval(loadStats, 30000);
+      })();
+    </script>
+  </body>
 </html>

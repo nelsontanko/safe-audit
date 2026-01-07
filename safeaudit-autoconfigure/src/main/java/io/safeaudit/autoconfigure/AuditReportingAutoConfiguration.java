@@ -11,15 +11,16 @@ import io.safeaudit.web.ui.AuditDashboardController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 
 /**
  * @author Nelson Tanko
  */
 @AutoConfiguration
+@AutoConfigureAfter(AuditStorageAutoConfiguration.class)
 @ConditionalOnWebApplication
 @ConditionalOnBean(AuditStorage.class)
 public class AuditReportingAutoConfiguration {
@@ -95,23 +96,7 @@ public class AuditReportingAutoConfiguration {
     @ConditionalOnProperty(prefix = "audit.reporting.ui", name = "enabled", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean
     public AuditDashboardController auditDashboardController() {
-        log.info("Registering audit dashboard UI");
+        log.info("Registering audit dashboard UI at /audit/dashboard");
         return new AuditDashboardController();
-    }
-
-    /**
-     * Configure view resolver for dashboard.
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = "audit.reporting.ui", name = "enabled", havingValue = "true", matchIfMissing = true)
-    public WebMvcConfigurer auditDashboardConfigurer(AuditProperties properties) {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addViewControllers(ViewControllerRegistry registry) {
-                String path = properties.getReporting().getUi().getPath();
-                log.info("Mapping audit dashboard to: {}", path);
-                registry.addViewController(path).setViewName("audit-dashboard");
-            }
-        };
     }
 }
