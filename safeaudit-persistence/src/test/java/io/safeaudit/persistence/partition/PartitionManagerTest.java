@@ -20,6 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * @author Nelson Tanko
+ * @since 1.0.0
+ */
 @ExtendWith(MockitoExtension.class)
 class PartitionManagerTest {
 

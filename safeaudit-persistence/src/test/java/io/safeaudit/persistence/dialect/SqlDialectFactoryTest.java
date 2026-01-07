@@ -2,13 +2,17 @@ package io.safeaudit.persistence.dialect;
 
 import io.safeaudit.persistence.DatabaseType;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
+@ExtendWith(MockitoExtension.class)
 class SqlDialectFactoryTest {
 
     @Test

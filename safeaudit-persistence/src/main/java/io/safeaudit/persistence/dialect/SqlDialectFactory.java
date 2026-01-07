@@ -4,6 +4,7 @@ import io.safeaudit.persistence.DatabaseType;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public final class SqlDialectFactory {
 

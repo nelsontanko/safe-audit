@@ -17,6 +17,7 @@ import java.util.List;
  * Automatically creates partitions based on configured strategy.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class PartitionManager {
 

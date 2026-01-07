@@ -2,6 +2,7 @@ package io.safeaudit.persistence.dialect;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public interface SqlDialect {
 

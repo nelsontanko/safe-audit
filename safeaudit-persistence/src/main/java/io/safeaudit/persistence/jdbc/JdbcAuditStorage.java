@@ -30,6 +30,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class JdbcAuditStorage implements AuditStorage {
 

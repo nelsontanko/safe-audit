@@ -4,13 +4,14 @@ import java.util.Set;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public final class SqlTableRegistry {
 
     private static final Set<String> ALLOWED_TABLES = Set.of(
             "audit_events",
             "audit_logs",
-            "ndpr_audit_logs",
+            "ndpa_audit_logs",
             "cbn_transaction_audits"
     );
 

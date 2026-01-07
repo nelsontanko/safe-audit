@@ -13,6 +13,7 @@ import java.sql.Connection;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public final class AuditStorageFactory {
 

@@ -4,6 +4,8 @@ import io.safeaudit.core.config.AuditProperties;
 import io.safeaudit.persistence.dialect.H2Dialect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
@@ -12,7 +14,9 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
+@ExtendWith(MockitoExtension.class)
 class SchemaManagerTest {
 
     private SchemaManager schemaManager;

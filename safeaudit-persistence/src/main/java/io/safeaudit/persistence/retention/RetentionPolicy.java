@@ -11,6 +11,7 @@ import java.time.LocalDate;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class RetentionPolicy {
 

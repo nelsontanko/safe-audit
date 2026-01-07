@@ -11,6 +11,7 @@ import java.util.Set;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class QueryBuilder {
 

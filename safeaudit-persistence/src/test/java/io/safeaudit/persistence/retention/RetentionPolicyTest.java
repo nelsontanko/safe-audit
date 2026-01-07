@@ -12,9 +12,12 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
+/**
+ * @author Nelson Tanko
+ * @since 1.0.0
+ */
 @ExtendWith(MockitoExtension.class)
 class RetentionPolicyTest {
 
@@ -77,7 +80,7 @@ class RetentionPolicyTest {
         // Mock insert into archive returns 5 rows
         when(jdbcTemplate.update(contains("INSERT INTO audit_events_archive"), any(LocalDate.class)))
                 .thenReturn(5);
-        
+
         // Mock delete from main table
         when(jdbcTemplate.update(contains("DELETE FROM audit_events"), any(LocalDate.class)))
                 .thenReturn(5);
@@ -95,7 +98,7 @@ class RetentionPolicyTest {
         // Given
         retentionConfig.setEnabled(true);
         retentionConfig.setArchivalEnabled(true);
-        
+
         // Mock insert into archive returns 0 rows
         when(jdbcTemplate.update(contains("INSERT INTO audit_events_archive"), any(LocalDate.class)))
                 .thenReturn(0);
@@ -113,7 +116,7 @@ class RetentionPolicyTest {
         // Given
         retentionConfig.setEnabled(true);
         retentionConfig.setDefaultDays(365);
-        
+
         when(jdbcTemplate.update(anyString(), any(LocalDate.class))).thenReturn(10);
 
         // When

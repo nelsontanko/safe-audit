@@ -6,6 +6,8 @@ import io.safeaudit.core.domain.enums.AuditSeverity;
 import io.safeaudit.persistence.dialect.H2Dialect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
@@ -21,7 +23,9 @@ import static org.mockito.Mockito.*;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
+@ExtendWith(MockitoExtension.class)
 class JdbcAuditStorageTest {
 
     private JdbcTemplate jdbcTemplate;

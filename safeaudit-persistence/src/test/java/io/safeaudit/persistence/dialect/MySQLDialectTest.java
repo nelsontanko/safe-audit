@@ -1,12 +1,16 @@
 package io.safeaudit.persistence.dialect;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
+@ExtendWith(MockitoExtension.class)
 class MySQLDialectTest {
 
     private final MySQLDialect dialect = new MySQLDialect();

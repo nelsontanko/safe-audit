@@ -2,6 +2,7 @@ package io.safeaudit.persistence;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public enum DatabaseType {
     POSTGRESQL("PostgreSQL", "org.postgresql.Driver"),
