@@ -23,6 +23,7 @@ import javax.sql.DataSource;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 @AutoConfiguration
 @AutoConfigureAfter(DataSourceAutoConfiguration.class)
@@ -34,7 +35,11 @@ public class AuditStorageAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(SqlDialect.class)
     @ConditionalOnBean(DataSource.class)
-    @ConditionalOnProperty(prefix = "audit.storage", name = "type", havingValue = "DATABASE", matchIfMissing = true)
+    @ConditionalOnProperty(
+            prefix = "audit.storage",
+            name = "type",
+            havingValue = "DATABASE",
+            matchIfMissing = true)
     public SqlDialect sqlDialect(DataSource dataSource, AuditProperties properties) {
         return AuditStorageFactory.resolveDialect(dataSource, properties);
     }
@@ -42,7 +47,11 @@ public class AuditStorageAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(AuditStorage.class)
     @ConditionalOnBean(DataSource.class)
-    @ConditionalOnProperty(prefix = "audit.storage", name = "type", havingValue = "DATABASE", matchIfMissing = true)
+    @ConditionalOnProperty(
+            prefix = "audit.storage",
+            name = "type",
+            havingValue = "DATABASE",
+            matchIfMissing = true)
     public AuditStorage jdbcAuditStorage(DataSource dataSource, SqlDialect dialect, AuditProperties properties) {
         log.info("Initializing JDBC audit storage with dialect: {}", dialect.getDatabaseType());
         return new io.safeaudit.persistence.jdbc.JdbcAuditStorage(dataSource, dialect);
@@ -77,7 +86,10 @@ public class AuditStorageAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnBean({DataSource.class, SqlDialect.class})
-    @ConditionalOnProperty(prefix = "audit.storage.database.partitioning", name = "enabled", havingValue = "true")
+    @ConditionalOnProperty(
+            prefix = "audit.storage.database.partitioning",
+            name = "enabled",
+            havingValue = "true")
     public PartitionManager partitionManager(
             DataSource dataSource,
             SqlDialect dialect,
@@ -92,7 +104,10 @@ public class AuditStorageAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnBean(DataSource.class)
-    @ConditionalOnProperty(prefix = "audit.storage.database.retention", name = "enabled", havingValue = "true")
+    @ConditionalOnProperty(
+            prefix = "audit.storage.database.retention",
+            name = "enabled",
+            havingValue = "true")
     public RetentionPolicy retentionPolicy(DataSource dataSource, AuditProperties properties) {
         return new RetentionPolicy(dataSource, properties);
     }

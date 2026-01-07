@@ -25,6 +25,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 @AutoConfiguration
 @ConditionalOnProperty(prefix = "audit", name = "enabled", havingValue = "true", matchIfMissing = true)

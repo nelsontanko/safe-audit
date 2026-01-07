@@ -8,6 +8,8 @@ import io.safeaudit.web.export.CSVExporter;
 import io.safeaudit.web.export.PDFExporter;
 import io.safeaudit.web.ui.AuditDashboardController;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +18,11 @@ import org.springframework.context.annotation.Configuration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+/**
+ * @author Nelson Tanko
+ * @since 1.0.0
+ */
+@ExtendWith(MockitoExtension.class)
 class AuditReportingAutoConfigurationTest {
 
     private final WebApplicationContextRunner contextRunner = new WebApplicationContextRunner()
@@ -29,11 +36,11 @@ class AuditReportingAutoConfigurationTest {
                     assertThat(context).hasSingleBean(AuditQueryController.class);
                     assertThat(context).hasSingleBean(AuditExportController.class);
                     assertThat(context).hasSingleBean(AuditHealthController.class);
-                    
+
                     // Exporters
                     assertThat(context).hasSingleBean(CSVExporter.class);
                     assertThat(context).hasSingleBean(PDFExporter.class);
-                    
+
                     // UI
                     assertThat(context).hasSingleBean(AuditDashboardController.class);
                 });
@@ -48,7 +55,7 @@ class AuditReportingAutoConfigurationTest {
                     assertThat(context).doesNotHaveBean(AuditQueryController.class);
                     assertThat(context).doesNotHaveBean(AuditExportController.class);
                     assertThat(context).doesNotHaveBean(AuditHealthController.class);
-                    
+
                     // UI still enabled
                     assertThat(context).hasSingleBean(AuditDashboardController.class);
                 });
@@ -61,7 +68,7 @@ class AuditReportingAutoConfigurationTest {
                 .run(context -> {
                     // API still enabled
                     assertThat(context).hasSingleBean(AuditQueryController.class);
-                    
+
                     // UI disabled
                     assertThat(context).doesNotHaveBean(AuditDashboardController.class);
                 });

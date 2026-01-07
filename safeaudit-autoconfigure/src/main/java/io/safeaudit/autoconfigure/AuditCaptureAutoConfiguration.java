@@ -21,6 +21,7 @@ import org.springframework.core.Ordered;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 @AutoConfiguration
 @ConditionalOnClass(name = "jakarta.servlet.Filter")
@@ -42,7 +43,11 @@ public class AuditCaptureAutoConfiguration {
      */
     @Bean
     @ConditionalOnWebApplication
-    @ConditionalOnProperty(prefix = "audit.capture.http", name = "enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(
+            prefix = "audit.capture.http",
+            name = "enabled",
+            havingValue = "true",
+            matchIfMissing = true)
     public FilterRegistrationBean<AuditHttpFilter> auditHttpFilter(
             AuditEventCapture eventCapture,
             AuditProperties properties,
@@ -70,7 +75,11 @@ public class AuditCaptureAutoConfiguration {
      */
     @Bean
     @ConditionalOnClass(name = "org.aspectj.lang.annotation.Aspect")
-    @ConditionalOnProperty(prefix = "audit.capture.method", name = "enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(
+            prefix = "audit.capture.method",
+            name = "enabled",
+            havingValue = "true",
+            matchIfMissing = true)
     @ConditionalOnMissingBean
     public AuditMethodInterceptor auditMethodInterceptor(
             AuditEventCapture eventCapture,

@@ -15,9 +15,9 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.context.annotation.Bean;
 
-
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 @AutoConfiguration
 @AutoConfigureAfter(AuditStorageAutoConfiguration.class)
@@ -31,7 +31,11 @@ public class AuditReportingAutoConfiguration {
      * Query controller for REST API.
      */
     @Bean
-    @ConditionalOnProperty(prefix = "audit.reporting.api", name = "enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(
+            prefix = "audit.reporting.api",
+            name = "enabled",
+            havingValue = "true",
+            matchIfMissing = true)
     @ConditionalOnMissingBean
     public AuditQueryController auditQueryController(
             AuditStorage storage,
@@ -46,7 +50,11 @@ public class AuditReportingAutoConfiguration {
      * Export controller for PDF/CSV.
      */
     @Bean
-    @ConditionalOnProperty(prefix = "audit.reporting.api", name = "enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(
+            prefix = "audit.reporting.api",
+            name = "enabled",
+            havingValue = "true",
+            matchIfMissing = true)
     @ConditionalOnMissingBean
     public AuditExportController auditExportController(
             AuditStorage storage,
@@ -61,7 +69,11 @@ public class AuditReportingAutoConfiguration {
      * Health controller.
      */
     @Bean
-    @ConditionalOnProperty(prefix = "audit.reporting.api", name = "enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(
+            prefix = "audit.reporting.api",
+            name = "enabled",
+            havingValue = "true",
+            matchIfMissing = true)
     @ConditionalOnMissingBean
     public AuditHealthController auditHealthController(AuditStorage storage) {
         return new AuditHealthController(storage);
@@ -93,7 +105,11 @@ public class AuditReportingAutoConfiguration {
      * Dashboard controller.
      */
     @Bean
-    @ConditionalOnProperty(prefix = "audit.reporting.ui", name = "enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(
+            prefix = "audit.reporting.ui",
+            name = "enabled",
+            havingValue = "true",
+            matchIfMissing = true)
     @ConditionalOnMissingBean
     public AuditDashboardController auditDashboardController() {
         log.info("Registering audit dashboard UI at /audit/dashboard");

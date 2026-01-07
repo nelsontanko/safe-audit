@@ -9,6 +9,8 @@ import io.safeaudit.core.processing.queue.VirtualThreadAuditQueue;
 import io.safeaudit.core.spi.AuditStorage;
 import io.safeaudit.persistence.schema.SchemaManager;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +21,11 @@ import javax.sql.DataSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+/**
+ * @author Nelson Tanko
+ * @since 1.0.0
+ */
+@ExtendWith(MockitoExtension.class)
 class AuditProcessingAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()

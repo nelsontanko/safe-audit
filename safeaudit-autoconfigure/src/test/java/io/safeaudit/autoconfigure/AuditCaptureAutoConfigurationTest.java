@@ -5,6 +5,8 @@ import io.safeaudit.core.spi.AuditEventCapture;
 import io.safeaudit.web.capture.AuditHttpFilter;
 import io.safeaudit.web.capture.AuditMethodInterceptor;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -15,6 +17,11 @@ import org.springframework.context.annotation.Primary;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+/**
+ * @author Nelson Tanko
+ * @since 1.0.0
+ */
+@ExtendWith(MockitoExtension.class)
 class AuditCaptureAutoConfigurationTest {
 
     private final WebApplicationContextRunner contextRunner = new WebApplicationContextRunner()

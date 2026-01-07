@@ -1,0 +1,5 @@
+audit:
+  storage:
+    database:
+      dialect: H2
+    type: database

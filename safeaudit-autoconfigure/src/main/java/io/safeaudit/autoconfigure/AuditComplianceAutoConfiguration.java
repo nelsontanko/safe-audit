@@ -15,6 +15,7 @@ import java.util.Set;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 @AutoConfiguration
 public class AuditComplianceAutoConfiguration {

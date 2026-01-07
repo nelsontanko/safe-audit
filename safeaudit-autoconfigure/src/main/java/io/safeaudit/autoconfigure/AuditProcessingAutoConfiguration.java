@@ -30,6 +30,7 @@ import java.util.concurrent.BlockingQueue;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 @AutoConfiguration
 public class AuditProcessingAutoConfiguration {
@@ -41,7 +42,11 @@ public class AuditProcessingAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(UserContextEnricher.class)
-    @ConditionalOnProperty(prefix = "audit.processing.enrichment", name = "user-context", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(
+            prefix = "audit.processing.enrichment",
+            name = "user-context",
+            havingValue = "true",
+            matchIfMissing = true)
     public UserContextEnricher userContextEnricher() {
         return new UserContextEnricher();
     }
@@ -51,7 +56,11 @@ public class AuditProcessingAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(CorrelationIdEnricher.class)
-    @ConditionalOnProperty(prefix = "audit.processing.enrichment", name = "correlation-id", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(
+            prefix = "audit.processing.enrichment",
+            name = "correlation-id",
+            havingValue = "true",
+            matchIfMissing = true)
     public CorrelationIdEnricher correlationIdEnricher() {
         return new CorrelationIdEnricher();
     }
@@ -61,7 +70,11 @@ public class AuditProcessingAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(PIIMasker.class)
-    @ConditionalOnProperty(prefix = "audit.processing.compliance.pii-masking", name = "enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(
+            prefix = "audit.processing.compliance.pii-masking",
+            name = "enabled",
+            havingValue = "true",
+            matchIfMissing = true)
     public PIIMasker piiMasker(AuditProperties properties) {
         var config = properties.getProcessing().getCompliance().getPiiMasking();
         return new PIIMasker(config.getFields(), config.getStrategy());
@@ -72,7 +85,11 @@ public class AuditProcessingAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(HashCalculator.class)
-    @ConditionalOnProperty(prefix = "audit.integrity.hashing", name = "enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(
+            prefix = "audit.integrity.hashing",
+            name = "enabled",
+            havingValue = "true",
+            matchIfMissing = true)
     public HashCalculator hashCalculator(AuditProperties properties) {
         var config = properties.getIntegrity().getHashing();
         return new HashCalculator(config.getAlgorithm(), config.isIncludePreviousHash());
@@ -98,7 +115,11 @@ public class AuditProcessingAutoConfiguration {
      * Asynchronous processing pipeline.
      */
     @Bean
-    @ConditionalOnProperty(prefix = "audit.processing", name = "mode", havingValue = "ASYNC", matchIfMissing = true)
+    @ConditionalOnProperty(
+            prefix = "audit.processing",
+            name = "mode",
+            havingValue = "ASYNC",
+            matchIfMissing = true)
     @ConditionalOnMissingBean(AuditProcessingPipeline.class)
     public AsynchronousProcessingPipeline asynchronousProcessingPipeline(
             List<AuditEventProcessor> processors,

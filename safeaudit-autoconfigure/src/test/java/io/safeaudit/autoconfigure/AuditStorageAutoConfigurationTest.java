@@ -7,6 +7,8 @@ import io.safeaudit.persistence.partition.PartitionManager;
 import io.safeaudit.persistence.retention.RetentionPolicy;
 import io.safeaudit.persistence.schema.SchemaManager;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +20,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Nelson Tanko
+ * @since 1.0.0
+ */
+@ExtendWith(MockitoExtension.class)
 class AuditStorageAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
