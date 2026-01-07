@@ -11,9 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -23,13 +25,22 @@ import javax.sql.DataSource;
  * @author Nelson Tanko
  */
 @AutoConfiguration
+@AutoConfigureAfter(DataSourceAutoConfiguration.class)
 @EnableScheduling
 public class AuditStorageAutoConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(AuditStorageAutoConfiguration.class);
 
     @Bean
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(SqlDialect.class)
+    @ConditionalOnBean(DataSource.class)
+    @ConditionalOnProperty(prefix = "audit.storage", name = "type", havingValue = "DATABASE", matchIfMissing = true)
+    public SqlDialect sqlDialect(DataSource dataSource, AuditProperties properties) {
+        return AuditStorageFactory.resolveDialect(dataSource, properties);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(AuditStorage.class)
     @ConditionalOnBean(DataSource.class)
     @ConditionalOnProperty(prefix = "audit.storage", name = "type", havingValue = "DATABASE", matchIfMissing = true)
     public AuditStorage jdbcAuditStorage(DataSource dataSource, SqlDialect dialect, AuditProperties properties) {
@@ -37,19 +48,11 @@ public class AuditStorageAutoConfiguration {
         return new io.safeaudit.persistence.jdbc.JdbcAuditStorage(dataSource, dialect);
     }
 
-    @Bean
-    @ConditionalOnMissingBean({SqlDialect.class, AuditStorage.class})
-    @ConditionalOnBean(DataSource.class)
-    @ConditionalOnProperty(prefix = "audit.storage", name = "type", havingValue = "DATABASE", matchIfMissing = true)
-    public SqlDialect sqlDialect(DataSource dataSource, AuditProperties properties) {
-        return AuditStorageFactory.resolveDialect(dataSource, properties);
-    }
-
     /**
      * Fallback audit storage when database is not available.
      */
     @Bean
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(AuditStorage.class)
     public AuditStorage loggingAuditStorage() {
         log.info("Creating fallback Logging audit storage");
         return new io.safeaudit.core.spi.LoggingAuditStorage();
@@ -119,5 +122,4 @@ public class AuditStorageAutoConfiguration {
         };
     }
 
-    // Dialect is now provided as a proper bean
 }

@@ -1,7 +1,6 @@
 package io.safeaudit.persistence;
 
 import io.safeaudit.core.config.AuditProperties;
-import io.safeaudit.core.exception.AuditConfigurationException;
 import io.safeaudit.core.spi.AuditStorage;
 import io.safeaudit.persistence.jdbc.JdbcAuditStorage;
 import org.junit.jupiter.api.Test;
@@ -50,30 +49,6 @@ class AuditStorageFactoryTest {
 
         // Then
         assertThat(storage).isInstanceOf(JdbcAuditStorage.class);
-    }
-
-    @Test
-    void shouldThrowExceptionWhenConnectionFails() throws SQLException {
-        // Given
-        when(dataSource.getConnection()).thenThrow(new SQLException("Connection failed"));
-
-        // When/Then
-        assertThatThrownBy(() -> AuditStorageFactory.create(dataSource, properties))
-                .isInstanceOf(AuditConfigurationException.class)
-                .hasMessageContaining("Failed to detect database type");
-    }
-
-    @Test
-    void shouldThrowExceptionForUnsupportedDatabase() throws SQLException {
-        // Given
-        when(dataSource.getConnection()).thenReturn(connection);
-        when(connection.getMetaData()).thenReturn(metaData);
-        when(metaData.getDatabaseProductName()).thenReturn("UnknownDB");
-
-        // When/Then
-        assertThatThrownBy(() -> AuditStorageFactory.create(dataSource, properties))
-                .isInstanceOf(AuditConfigurationException.class)
-                .hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

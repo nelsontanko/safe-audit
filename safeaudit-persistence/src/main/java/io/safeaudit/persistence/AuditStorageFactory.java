@@ -1,7 +1,6 @@
 package io.safeaudit.persistence;
 
 import io.safeaudit.core.config.AuditProperties;
-import io.safeaudit.core.exception.AuditConfigurationException;
 import io.safeaudit.core.spi.AuditStorage;
 import io.safeaudit.persistence.dialect.SqlDialect;
 import io.safeaudit.persistence.dialect.SqlDialectFactory;
@@ -67,9 +66,9 @@ public final class AuditStorageFactory {
                 return DatabaseType.H2;
             }
             var productName = metaData.getDatabaseProductName();
-            var productVersion = metaData.getDatabaseProductVersion();
+//            var productVersion = metaData.getDatabaseProductVersion();
 
-            log.info("Database detected: {} (Version: {})", productName, productVersion);
+            log.info("Database detected: {}", productName);
 
             return DatabaseType.fromProductName(productName);
         } catch (Exception e) {

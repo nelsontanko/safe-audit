@@ -35,7 +35,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Import({
         AuditCaptureAutoConfiguration.class,
         AuditProcessingAutoConfiguration.class,
-        AuditStorageAutoConfiguration.class,
         AuditReportingAutoConfiguration.class,
         AuditComplianceAutoConfiguration.class
 })
