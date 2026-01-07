@@ -119,25 +119,6 @@ SafeAudit is modular by design:
 
 While SafeAudit automatically captures HTTP requests, you can also record custom business events:
 
-```java
-
-@Autowired
-private AuditProcessingPipeline auditPipeline;
-
-public void processPayment(String orderId) {
-    // ... business logic ...
-
-    AuditEvent event = AuditEvent.builder()
-            .action("PAYMENT_PROCESSED")
-            .resource("ORDER", orderId)
-            .severity(AuditSeverity.INFO)
-            .detail("amount", amount)
-            .build();
-
-    auditPipeline.process(event);
-}
-```
-
 ## 🎯 Method-Level Auditing
 
 ```java
