@@ -17,6 +17,7 @@ import java.util.Optional;
  * Applies a chain of processors before storing events.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public abstract class AuditProcessingPipeline {
 

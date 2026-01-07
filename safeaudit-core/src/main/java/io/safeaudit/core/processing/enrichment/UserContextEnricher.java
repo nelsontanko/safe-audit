@@ -9,6 +9,7 @@ import org.springframework.util.ClassUtils;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class UserContextEnricher implements AuditEventProcessor {
 
@@ -93,7 +94,6 @@ public class UserContextEnricher implements AuditEventProcessor {
     }
 
     /**
-     * Inner class to isolate Spring Security dependency.
      * This class will only be loaded if SPRING_SECURITY_PRESENT is true
      * and one of its methods is called.
      */

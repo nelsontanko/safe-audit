@@ -4,6 +4,7 @@ import java.util.Objects;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public final class HealthStatus {
 

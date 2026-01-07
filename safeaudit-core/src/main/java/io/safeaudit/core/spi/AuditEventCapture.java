@@ -7,6 +7,7 @@ import io.safeaudit.core.domain.AuditEvent;
  * Different capture mechanisms (HTTP, method, event) implement this.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 @FunctionalInterface
 public interface AuditEventCapture {

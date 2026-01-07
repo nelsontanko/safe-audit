@@ -18,6 +18,7 @@ import java.util.concurrent.BlockingQueue;
  * Minimal request latency but eventual consistency.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class AsynchronousProcessingPipeline extends AuditProcessingPipeline {
 

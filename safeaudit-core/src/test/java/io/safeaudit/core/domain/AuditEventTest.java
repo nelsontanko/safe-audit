@@ -2,6 +2,8 @@ package io.safeaudit.core.domain;
 
 import io.safeaudit.core.domain.enums.AuditSeverity;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 
@@ -10,7 +12,9 @@ import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
+@ExtendWith(MockitoExtension.class)
 class AuditEventTest {
 
     @Test

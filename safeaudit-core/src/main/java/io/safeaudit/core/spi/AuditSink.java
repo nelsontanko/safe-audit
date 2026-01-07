@@ -10,6 +10,7 @@ import java.util.List;
  * Sinks are best-effort - failures should not block the main audit pipeline.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public interface AuditSink {
 

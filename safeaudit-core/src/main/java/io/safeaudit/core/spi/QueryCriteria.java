@@ -10,6 +10,7 @@ import java.util.Set;
  * Query criteria for filtering audit events.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public final class QueryCriteria {
 

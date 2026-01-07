@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public final class ApplicationInfo {
 

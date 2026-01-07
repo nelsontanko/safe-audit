@@ -16,6 +16,7 @@ import java.util.List;
  * Batches audit events for efficient bulk insertion.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class BatchProcessor {
 

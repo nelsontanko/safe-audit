@@ -16,6 +16,7 @@ import java.util.Set;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class PIIMasker implements AuditEventProcessor {
 
@@ -126,8 +127,8 @@ public class PIIMasker implements AuditEventProcessor {
         if (value.length() <= 4) {
             return "****";
         }
-        String prefix = value.substring(0, 2);
-        String suffix = value.substring(value.length() - 2);
+        var prefix = value.substring(0, 2);
+        var suffix = value.substring(value.length() - 2);
         return prefix + "****" + suffix;
     }
 

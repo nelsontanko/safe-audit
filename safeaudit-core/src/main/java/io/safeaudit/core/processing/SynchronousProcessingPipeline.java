@@ -17,6 +17,7 @@ import java.util.Optional;
  * Increases request latency but guarantees immediate persistence.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class SynchronousProcessingPipeline extends AuditProcessingPipeline {
 

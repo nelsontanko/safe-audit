@@ -15,6 +15,7 @@ import java.util.Optional;
  * Used when no other storage implementation is available.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class LoggingAuditStorage implements AuditStorage {
 

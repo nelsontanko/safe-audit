@@ -8,13 +8,8 @@ import java.time.Instant;
 import java.util.Objects;
 
 /**
- * @param userId            Actor information
- * @param resource          Context
- * @param requestPayload    Payload
- * @param compliance        Compliance metadata
- * @param previousEventHash Integrity
- * @param capturedBy        Audit metadata
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public record AuditEvent(
         String eventId, long sequenceNumber, Instant timestamp, String eventType,

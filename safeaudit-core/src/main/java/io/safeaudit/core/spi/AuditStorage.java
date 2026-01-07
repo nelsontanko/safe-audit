@@ -13,6 +13,7 @@ import java.util.Optional;
  * Implementations must be thread-safe and support concurrent access.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public interface AuditStorage {
 

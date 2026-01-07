@@ -3,6 +3,8 @@ package io.safeaudit.core.processing.integrity;
 import io.safeaudit.core.domain.AuditEvent;
 import io.safeaudit.core.domain.enums.AuditSeverity;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 
@@ -11,7 +13,9 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
+@ExtendWith(MockitoExtension.class)
 class HashCalculatorTest {
 
     @Test

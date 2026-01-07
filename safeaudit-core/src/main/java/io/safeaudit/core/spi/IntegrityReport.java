@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public record IntegrityReport(
         boolean valid, Instant from, Instant to,

@@ -1,4 +1,4 @@
-package io.safeaudit.core.util;
+package io.safeaudit.core.spi;
 
 /**
  * @author Nelson Tanko

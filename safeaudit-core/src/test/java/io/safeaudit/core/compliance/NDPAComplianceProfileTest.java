@@ -5,6 +5,8 @@ import io.safeaudit.core.domain.enums.AuditSeverity;
 import io.safeaudit.core.domain.enums.DataClassification;
 import io.safeaudit.core.exception.ComplianceViolationException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 
@@ -12,7 +14,9 @@ import static org.assertj.core.api.Assertions.*;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
+@ExtendWith(MockitoExtension.class)
 class NDPAComplianceProfileTest {
 
     private final NDPAComplianceProfile profile = new NDPAComplianceProfile();

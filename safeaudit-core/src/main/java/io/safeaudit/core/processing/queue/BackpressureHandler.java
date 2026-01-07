@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
  * Handles backpressure when audit queue is full.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public record BackpressureHandler(
         AuditProperties.BackpressureStrategy strategy,
@@ -23,19 +24,13 @@ public record BackpressureHandler(
         }
 
         switch (strategy) {
-            case DROP_OLDEST:
-                log.warn("Queue at capacity, event dropped: {}", event.eventId());
-                break;
+            case DROP_OLDEST -> log.warn("Queue at capacity, event dropped: {}", event.eventId());
 
-            case BLOCK:
-                log.warn("Queue at capacity, blocking caller");
-                // Caller will block on queue.offer()
-                break;
+            case BLOCK -> log.warn("Queue at capacity, blocking caller");
 
-            case REJECT:
-                throw new IllegalStateException(
-                        "Audit queue full, rejecting event: " + event.eventId()
-                );
+            case REJECT -> throw new IllegalStateException(
+                    "Audit queue full, rejecting event: " + event.eventId()
+            );
         }
     }
 }

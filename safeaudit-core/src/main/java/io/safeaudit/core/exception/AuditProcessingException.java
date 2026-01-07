@@ -4,10 +4,11 @@ import io.safeaudit.core.domain.AuditEvent;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class AuditProcessingException extends AuditException {
 
-    private final AuditEvent failedEvent;
+    private final transient AuditEvent failedEvent;
 
     public AuditProcessingException(String message, AuditEvent failedEvent) {
         super(message);

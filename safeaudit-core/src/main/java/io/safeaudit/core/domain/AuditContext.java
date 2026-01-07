@@ -6,6 +6,7 @@ import java.util.Optional;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public final class AuditContext {
 

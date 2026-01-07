@@ -7,6 +7,7 @@ import io.safeaudit.core.domain.AuditEvent;
  * Processors are chained to transform events before storage.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 @FunctionalInterface
 public interface AuditEventProcessor {

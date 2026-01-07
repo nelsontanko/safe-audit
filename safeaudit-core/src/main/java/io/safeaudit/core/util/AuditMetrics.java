@@ -8,6 +8,7 @@ import java.time.Duration;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class AuditMetrics {
 

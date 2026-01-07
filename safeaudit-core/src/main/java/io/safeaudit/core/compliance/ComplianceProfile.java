@@ -11,6 +11,7 @@ import java.util.Set;
  * Implementations define rules for specific regulations (CBN, NDPA, Tax).
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public interface ComplianceProfile {
 

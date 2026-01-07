@@ -9,7 +9,9 @@ import io.safeaudit.core.processing.integrity.HashCalculator;
 import io.safeaudit.core.spi.AuditEventProcessor;
 import io.safeaudit.core.spi.AuditStorage;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 import java.util.List;
@@ -20,7 +22,9 @@ import static org.mockito.Mockito.*;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
+@ExtendWith(MockitoExtension.class)
 class AuditProcessingPipelineIntegrationTest {
 
     @Test

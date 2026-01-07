@@ -10,6 +10,7 @@ import java.util.UUID;
  * Enriches audit events with correlation ID for distributed tracing.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class CorrelationIdEnricher implements AuditEventProcessor {
 

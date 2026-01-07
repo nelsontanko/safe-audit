@@ -2,6 +2,7 @@ package io.safeaudit.core.domain.enums;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public enum AuditSeverity {
     /**

@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public final class PayloadExtractor {
 

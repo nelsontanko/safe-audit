@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Falls back to platform threads if virtual threads not available.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class VirtualThreadAuditQueue {
 

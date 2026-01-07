@@ -18,10 +18,11 @@ import java.util.Set;
  * - Right to erasure support (audit exception)
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class NDPAComplianceProfile implements ComplianceProfile {
 
-    private static final Duration RETENTION_PERIOD = Duration.ofDays(365 * 6); // 6 years
+    private static final Duration RETENTION_PERIOD = Duration.ofDays(2190); // 6 years
     private static final Set<String> REQUIRED_EVENTS = Set.of(
             "DATA_ACCESS",
             "DATA_MODIFICATION",

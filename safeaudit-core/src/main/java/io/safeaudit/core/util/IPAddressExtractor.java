@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * Handles proxy headers (X-Forwarded-For, X-Real-IP).
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public final class IPAddressExtractor {
 

@@ -1,5 +1,7 @@
 package io.safeaudit.core.util;
 
+import io.safeaudit.core.spi.AuditEventIdGenerator;
+
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.UUID;
@@ -7,6 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class UUIDv7Generator implements AuditEventIdGenerator {
 

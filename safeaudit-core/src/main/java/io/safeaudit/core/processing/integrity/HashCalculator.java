@@ -13,6 +13,7 @@ import java.util.Base64;
  * Creates a chain by including the previous event's hash.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class HashCalculator implements AuditEventProcessor {
 

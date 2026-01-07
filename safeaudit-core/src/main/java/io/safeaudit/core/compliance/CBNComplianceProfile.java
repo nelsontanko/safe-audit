@@ -21,6 +21,7 @@ import static io.safeaudit.core.compliance.NDPAComplianceProfile.getAuditEvent;
  * - User authentication logging
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class CBNComplianceProfile implements ComplianceProfile {
 

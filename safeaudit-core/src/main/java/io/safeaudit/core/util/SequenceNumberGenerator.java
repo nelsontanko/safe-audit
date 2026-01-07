@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Each application instance maintains its own sequence.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class SequenceNumberGenerator {
 

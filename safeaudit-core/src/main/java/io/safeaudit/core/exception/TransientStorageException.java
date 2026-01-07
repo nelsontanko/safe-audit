@@ -2,6 +2,7 @@ package io.safeaudit.core.exception;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class TransientStorageException extends AuditStorageException {
 
