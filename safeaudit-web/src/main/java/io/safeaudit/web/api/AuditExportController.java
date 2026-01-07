@@ -20,6 +20,7 @@ import java.time.ZoneOffset;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 @RestController
 @RequestMapping("${audit.reporting.api.base-path:/audit}")

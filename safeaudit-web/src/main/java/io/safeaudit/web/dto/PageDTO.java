@@ -4,6 +4,7 @@ import java.util.List;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public record PageDTO<T>(
         List<T> content,

@@ -3,6 +3,8 @@ package io.safeaudit.web.export;
 import io.safeaudit.core.domain.AuditEvent;
 import io.safeaudit.core.domain.enums.AuditSeverity;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -10,6 +12,11 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * @author Nelson Tanko
+ * @since 1.0.0
+ */
+@ExtendWith(MockitoExtension.class)
 class PDFExporterTest {
 
     private final PDFExporter exporter = new PDFExporter();
@@ -31,7 +38,7 @@ class PDFExporterTest {
                 .httpStatusCode(200)
                 .applicationName("test-app")
                 .build();
-        
+
         var from = LocalDate.now().minusDays(1);
         var to = LocalDate.now();
 

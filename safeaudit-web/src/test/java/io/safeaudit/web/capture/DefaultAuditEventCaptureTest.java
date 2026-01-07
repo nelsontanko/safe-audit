@@ -13,6 +13,10 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.verify;
 
+/**
+ * @author Nelson Tanko
+ * @since 1.0.0
+ */
 @ExtendWith(MockitoExtension.class)
 class DefaultAuditEventCaptureTest {
 

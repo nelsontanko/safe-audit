@@ -14,6 +14,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * @author Nelson Tanko
+ * @since 1.0.0
+ */
 @WebMvcTest(AuditHealthController.class)
 class AuditHealthControllerTest {
 

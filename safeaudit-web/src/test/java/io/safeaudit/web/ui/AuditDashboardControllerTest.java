@@ -1,5 +1,6 @@
 package io.safeaudit.web.ui;
 
+import io.safeaudit.core.config.AuditProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -10,6 +11,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * @author Nelson Tanko
+ * @since 1.0.0
+ */
 @WebMvcTest(AuditDashboardController.class)
 class AuditDashboardControllerTest {
 
@@ -17,7 +22,7 @@ class AuditDashboardControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private io.safeaudit.core.config.AuditProperties auditProperties;
+    private AuditProperties auditProperties;
 
     @Test
     void shouldReturnDashboardView() throws Exception {

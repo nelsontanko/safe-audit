@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class CSVExporter {
 

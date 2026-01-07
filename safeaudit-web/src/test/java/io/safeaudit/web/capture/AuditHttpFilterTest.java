@@ -4,7 +4,7 @@ import io.safeaudit.core.config.AuditProperties;
 import io.safeaudit.core.domain.AuditEvent;
 import io.safeaudit.core.domain.enums.AuditSeverity;
 import io.safeaudit.core.spi.AuditEventCapture;
-import io.safeaudit.core.util.AuditEventIdGenerator;
+import io.safeaudit.core.spi.AuditEventIdGenerator;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +25,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * @author Nelson Tanko
+ * @since 1.0.0
+ */
 @ExtendWith(MockitoExtension.class)
 class AuditHttpFilterTest {
 

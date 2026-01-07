@@ -24,6 +24,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * @author Nelson Tanko
+ * @since 1.0.0
+ */
 @WebMvcTest(AuditExportController.class)
 class AuditExportControllerTest {
 

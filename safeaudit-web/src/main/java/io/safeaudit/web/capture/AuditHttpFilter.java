@@ -5,8 +5,8 @@ import io.safeaudit.core.domain.AuditContext;
 import io.safeaudit.core.domain.AuditEvent;
 import io.safeaudit.core.domain.enums.AuditSeverity;
 import io.safeaudit.core.spi.AuditEventCapture;
+import io.safeaudit.core.spi.AuditEventIdGenerator;
 import io.safeaudit.core.util.ApplicationInfo;
-import io.safeaudit.core.util.AuditEventIdGenerator;
 import io.safeaudit.core.util.IPAddressExtractor;
 import io.safeaudit.core.util.PayloadExtractor;
 import jakarta.servlet.FilterChain;
@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
+import org.springframework.lang.NonNull;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
@@ -27,6 +28,7 @@ import java.util.UUID;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class AuditHttpFilter extends OncePerRequestFilter implements Ordered {
 
@@ -57,9 +59,9 @@ public class AuditHttpFilter extends OncePerRequestFilter implements Ordered {
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         if (!shouldAudit(request)) {
             filterChain.doFilter(request, response);

@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public class PDFExporter {
 

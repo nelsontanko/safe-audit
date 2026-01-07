@@ -3,7 +3,7 @@ package io.safeaudit.web.capture;
 import io.safeaudit.core.domain.AuditEvent;
 import io.safeaudit.core.domain.enums.AuditSeverity;
 import io.safeaudit.core.spi.AuditEventCapture;
-import io.safeaudit.core.util.AuditEventIdGenerator;
+import io.safeaudit.core.spi.AuditEventIdGenerator;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+/**
+ * @author Nelson Tanko
+ * @since 1.0.0
+ */
 @ExtendWith(MockitoExtension.class)
 class AuditMethodInterceptorTest {
 

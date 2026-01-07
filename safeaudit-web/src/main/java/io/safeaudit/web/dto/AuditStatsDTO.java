@@ -4,6 +4,7 @@ import java.time.Instant;
 
 /**
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 public record AuditStatsDTO(
         long totalEvents,

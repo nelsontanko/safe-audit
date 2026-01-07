@@ -7,13 +7,14 @@
     <parent>
         <groupId>io.safeaudit</groupId>
         <artifactId>safe-audit-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>safeaudit-web</artifactId>
 
     <properties>
-
+        <itextpdf.version>9.4.0</itextpdf.version>
+        <commons-csv.version>1.14.1</commons-csv.version>
     </properties>
 
     <dependencies>
@@ -48,17 +49,17 @@
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>kernel</artifactId>
-            <version>9.4.0</version>
+            <version>${itextpdf.version}</version>
         </dependency>
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>layout</artifactId>
-            <version>9.4.0</version>
+            <version>${itextpdf.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
-            <version>1.14.1</version>
+            <version>${commons-csv.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

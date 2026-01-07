@@ -23,6 +23,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * @author Nelson Tanko
+ * @since 1.0.0
+ */
 @WebMvcTest(AuditQueryController.class)
 class AuditQueryControllerTest {
 

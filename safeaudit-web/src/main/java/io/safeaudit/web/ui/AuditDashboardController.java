@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
  * This avoids requiring Thymeleaf or other template engines in consumer apps.
  *
  * @author Nelson Tanko
+ * @since 1.0.0
  */
 @RestController
 @RequestMapping("${audit.reporting.ui.path:/audit/dashboard}")
