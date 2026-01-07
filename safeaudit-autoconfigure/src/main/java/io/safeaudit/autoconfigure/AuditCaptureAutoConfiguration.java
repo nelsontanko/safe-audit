@@ -3,7 +3,7 @@ package io.safeaudit.autoconfigure;
 import io.safeaudit.core.config.AuditProperties;
 import io.safeaudit.core.processing.AuditProcessingPipeline;
 import io.safeaudit.core.spi.AuditEventCapture;
-import io.safeaudit.core.util.AuditEventIdGenerator;
+import io.safeaudit.core.spi.AuditEventIdGenerator;
 import io.safeaudit.web.capture.AuditHttpFilter;
 import io.safeaudit.web.capture.AuditMethodInterceptor;
 import io.safeaudit.web.capture.DefaultAuditEventCapture;
