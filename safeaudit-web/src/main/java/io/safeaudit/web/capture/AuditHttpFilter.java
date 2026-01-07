@@ -105,6 +105,11 @@ public class AuditHttpFilter extends OncePerRequestFilter implements Ordered {
             Instant startTime,
             Throwable exception) {
 
+        Object shouldAudit = request.getAttribute(AuditAnnotationHandlerInterceptor.SHOULD_AUDIT_ATTRIBUTE);
+        if (!Boolean.TRUE.equals(shouldAudit)) {
+            return;
+        }
+
         var config = properties.getCapture().getHttp();
 
         var requestPayload = config.isIncludeRequestBody() ?

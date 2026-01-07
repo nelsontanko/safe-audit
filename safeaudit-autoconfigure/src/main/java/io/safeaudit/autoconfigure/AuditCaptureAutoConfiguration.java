@@ -4,6 +4,7 @@ import io.safeaudit.core.config.AuditProperties;
 import io.safeaudit.core.processing.AuditProcessingPipeline;
 import io.safeaudit.core.spi.AuditEventCapture;
 import io.safeaudit.core.spi.AuditEventIdGenerator;
+import io.safeaudit.web.capture.AuditAnnotationHandlerInterceptor;
 import io.safeaudit.web.capture.AuditHttpFilter;
 import io.safeaudit.web.capture.AuditMethodInterceptor;
 import io.safeaudit.web.capture.DefaultAuditEventCapture;
@@ -18,6 +19,8 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author Nelson Tanko
@@ -88,5 +91,24 @@ public class AuditCaptureAutoConfiguration {
 
         log.info("Registering @Audited method interceptor");
         return new AuditMethodInterceptor(eventCapture, idGenerator, applicationContext);
+    }
+
+    /**
+     * Registers the annotation handler interceptor.
+     */
+    @Bean
+    @ConditionalOnWebApplication
+    @ConditionalOnProperty(
+            prefix = "audit.capture.http",
+            name = "enabled",
+            havingValue = "true",
+            matchIfMissing = true)
+    public WebMvcConfigurer auditAnnotationInterceptorConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addInterceptors(InterceptorRegistry registry) {
+                registry.addInterceptor(new AuditAnnotationHandlerInterceptor());
+            }
+        };
     }
 }

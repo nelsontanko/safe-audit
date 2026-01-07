@@ -75,6 +75,7 @@ class AuditHttpFilterTest {
     void shouldCaptureSuccessfulRequest() throws ServletException, IOException {
         // Given
         var request = new MockHttpServletRequest("POST", "/api/test");
+        request.setAttribute("io.safeaudit.web.capture.SHOULD_AUDIT", true);
         request.setContent("request-body".getBytes());
         var response = new MockHttpServletResponse();
 
@@ -129,6 +130,7 @@ class AuditHttpFilterTest {
     void shouldHandleExceptionInChain() throws ServletException, IOException {
         // Given
         var request = new MockHttpServletRequest("GET", "/api/error");
+        request.setAttribute("io.safeaudit.web.capture.SHOULD_AUDIT", true);
         var response = new MockHttpServletResponse();
 
         doThrow(new RuntimeException("Processing failed"))
@@ -156,6 +158,7 @@ class AuditHttpFilterTest {
     void shouldUseExistingCorrelationId() throws ServletException, IOException {
         // Given
         var request = new MockHttpServletRequest("GET", "/api/test");
+        request.setAttribute("io.safeaudit.web.capture.SHOULD_AUDIT", true);
         request.addHeader("X-Correlation-ID", "existing-id");
         var response = new MockHttpServletResponse();
 
@@ -168,5 +171,19 @@ class AuditHttpFilterTest {
         // We can't easily verify ThreadLocal AuditContext here without exposing it or using a side-effect,
         // but we can ensure the request processed normally
         verify(eventCapture).capture(any());
+    }
+    @Test
+    void shouldNotCaptureWhenNotAudited() throws ServletException, IOException {
+        // Given
+        var request = new MockHttpServletRequest("POST", "/api/test");
+        // No attribute set
+        var response = new MockHttpServletResponse();
+
+        // When
+        filter.doFilterInternal(request, response, filterChain);
+
+        // Then
+        verify(filterChain).doFilter(any(), any());
+        verifyNoInteractions(eventCapture);
     }
 }
