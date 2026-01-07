@@ -1,8 +1,7 @@
-package io.safeaudit.persistence;
+package io.safeaudit.persistence.jdbc;
 
 import io.safeaudit.core.config.AuditProperties;
 import io.safeaudit.core.spi.AuditStorage;
-import io.safeaudit.persistence.jdbc.JdbcAuditStorage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;

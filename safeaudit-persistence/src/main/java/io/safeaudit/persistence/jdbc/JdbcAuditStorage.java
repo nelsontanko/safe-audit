@@ -140,7 +140,6 @@ public class JdbcAuditStorage implements AuditStorage {
     }
 
     @Override
-    @SuppressWarnings("java:S2077")
     public IntegrityReport verifyIntegrity(Instant from, Instant to) {
         try {
             String sql = """
@@ -190,7 +189,6 @@ public class JdbcAuditStorage implements AuditStorage {
     }
 
     @Override
-    @SuppressWarnings("java:S2077")
     public void initializeSchema() {
         try {
             log.info("Initializing audit schema for table: {}", tableName);
@@ -198,8 +196,8 @@ public class JdbcAuditStorage implements AuditStorage {
 
             // Execute each statement separately
             String[] statements = ddl.split(";");
-            for (String statement : statements) {
-                String trimmed = statement.trim();
+            for (var statement : statements) {
+                var trimmed = statement.trim();
                 if (!trimmed.isEmpty()) {
                     jdbcTemplate.execute(trimmed);
                 }

@@ -64,7 +64,7 @@ public abstract class AuditProcessingPipeline {
      */
     protected AuditEvent applyProcessors(AuditEvent event) {
         AuditEvent current = event;
-        for (AuditEventProcessor processor : processors) {
+        for (var processor : processors) {
             try {
                 current = processor.process(current);
             } catch (Exception e) {

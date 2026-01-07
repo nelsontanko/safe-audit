@@ -2,8 +2,8 @@ package io.safeaudit.autoconfigure;
 
 import io.safeaudit.core.config.AuditProperties;
 import io.safeaudit.core.spi.AuditStorage;
-import io.safeaudit.persistence.AuditStorageFactory;
 import io.safeaudit.persistence.dialect.SqlDialect;
+import io.safeaudit.persistence.jdbc.AuditStorageFactory;
 import io.safeaudit.persistence.partition.PartitionManager;
 import io.safeaudit.persistence.retention.RetentionPolicy;
 import io.safeaudit.persistence.schema.SchemaManager;

@@ -125,6 +125,12 @@
       "type": "java.lang.String",
       "description": "Hashing algorithm.",
       "defaultValue": "SHA-256"
+    },
+    {
+      "name": "audit.processing.compliance.regulations",
+      "type": "java.lang.String",
+      "description": "CBN or NDPA.",
+      "defaultValue": ""
     }
   ]
 }

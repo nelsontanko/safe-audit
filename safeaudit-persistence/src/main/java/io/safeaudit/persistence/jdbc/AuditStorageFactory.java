@@ -1,10 +1,10 @@
-package io.safeaudit.persistence;
+package io.safeaudit.persistence.jdbc;
 
 import io.safeaudit.core.config.AuditProperties;
 import io.safeaudit.core.spi.AuditStorage;
+import io.safeaudit.persistence.DatabaseType;
 import io.safeaudit.persistence.dialect.SqlDialect;
 import io.safeaudit.persistence.dialect.SqlDialectFactory;
-import io.safeaudit.persistence.jdbc.JdbcAuditStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
