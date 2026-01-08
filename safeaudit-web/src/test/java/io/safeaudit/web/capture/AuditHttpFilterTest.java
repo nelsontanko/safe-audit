@@ -44,6 +44,8 @@ class AuditHttpFilterTest {
     private FilterChain filterChain;
     @Mock
     private Environment environment;
+    @Mock
+    private io.safeaudit.core.util.SequenceNumberGenerator sequenceNumberGenerator;
 
     private AuditHttpFilter filter;
 
@@ -52,17 +54,31 @@ class AuditHttpFilterTest {
         // Mock deeply nested properties
         var capture = mock(AuditProperties.CaptureConfig.class);
         var http = mock(AuditProperties.HttpCaptureConfig.class);
+        var processing = mock(AuditProperties.ProcessingConfig.class);
+        var compliance = mock(AuditProperties.ComplianceConfig.class);
+        var storage = mock(AuditProperties.StorageConfig.class);
+        var database = mock(AuditProperties.DatabaseConfig.class);
+        var retention = mock(AuditProperties.RetentionConfig.class);
 
         lenient().when(properties.getCapture()).thenReturn(capture);
+        lenient().when(properties.getProcessing()).thenReturn(processing);
+        lenient().when(properties.getStorage()).thenReturn(storage);
+        lenient().when(processing.getCompliance()).thenReturn(compliance);
+        lenient().when(storage.getDatabase()).thenReturn(database);
+        lenient().when(database.getRetention()).thenReturn(retention);
+        
         lenient().when(capture.getHttp()).thenReturn(http);
         lenient().when(http.getExclusionPatterns()).thenReturn(List.of());
         lenient().when(http.isIncludeRequestBody()).thenReturn(true);
         lenient().when(http.isIncludeResponseBody()).thenReturn(true);
         lenient().when(http.getMaxBodySize()).thenReturn(1024);
+        
+        lenient().when(compliance.getRegulations()).thenReturn(java.util.Set.of("GDPR"));
+        lenient().when(retention.getDefaultDays()).thenReturn(365);
 
         mockApplicationInfo();
 
-        filter = new AuditHttpFilter(eventCapture, properties, idGenerator, applicationContext);
+        filter = new AuditHttpFilter(eventCapture, properties, idGenerator, applicationContext, sequenceNumberGenerator);
     }
 
     private void mockApplicationInfo() {

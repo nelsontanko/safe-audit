@@ -9,6 +9,7 @@ import io.safeaudit.core.spi.AuditEventIdGenerator;
 import io.safeaudit.core.util.ApplicationInfo;
 import io.safeaudit.core.util.IPAddressExtractor;
 import io.safeaudit.core.util.PayloadExtractor;
+import io.safeaudit.core.util.SequenceNumberGenerator;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,17 +40,20 @@ public class AuditHttpFilter extends OncePerRequestFilter implements Ordered {
     private final AuditEventIdGenerator idGenerator;
     private final String applicationName;
     private final String applicationInstance;
+    private final SequenceNumberGenerator sequenceNumberGenerator;
 
     public AuditHttpFilter(
             AuditEventCapture eventCapture,
             AuditProperties properties,
             AuditEventIdGenerator idGenerator,
-            ApplicationContext applicationContext) {
+            ApplicationContext applicationContext,
+            io.safeaudit.core.util.SequenceNumberGenerator sequenceNumberGenerator) {
         this.eventCapture = eventCapture;
         this.properties = properties;
         this.idGenerator = idGenerator;
         this.applicationName = ApplicationInfo.getApplicationName(applicationContext);
         this.applicationInstance = ApplicationInfo.getApplicationInstance();
+        this.sequenceNumberGenerator = sequenceNumberGenerator;
     }
 
     @Override
@@ -110,28 +114,49 @@ public class AuditHttpFilter extends OncePerRequestFilter implements Ordered {
             return;
         }
 
+        Audited audited = (Audited) request.getAttribute(AuditAnnotationHandlerInterceptor.AUDITED_ANNOTATION_ATTRIBUTE);
+
         var config = properties.getCapture().getHttp();
 
-        var requestPayload = config.isIncludeRequestBody() ?
-                PayloadExtractor.extractRequestBody(request, config.getMaxBodySize()) : null;
+        var requestPayload = (String) request.getAttribute(AuditMethodInterceptor.ARGS_ATTRIBUTE);
+        if (requestPayload == null && config.isIncludeRequestBody()) {
+            requestPayload = PayloadExtractor.extractRequestBody(request, config.getMaxBodySize());
+        }
 
-        var responsePayload = config.isIncludeResponseBody() ?
-                PayloadExtractor.extractResponseBody(response, config.getMaxBodySize()) : null;
+        var responsePayload = (String) request.getAttribute(AuditMethodInterceptor.RESULT_ATTRIBUTE);
+        if (responsePayload == null && config.isIncludeResponseBody()) {
+            responsePayload = PayloadExtractor.extractResponseBody(response, config.getMaxBodySize());
+        }
+
+        var eventType = (audited != null && !audited.eventType().isBlank()) ? audited.eventType() : determineEventType(request, response);
+        var severity = (audited != null && audited.severity() != AuditSeverity.INFO) ? audited.severity() : determineSeverity(response.getStatus(), exception);
+        var resource = (audited != null && !audited.resource().isBlank()) ? audited.resource() : request.getRequestURI();
+
+        var complianceConfig = properties.getProcessing().getCompliance();
+        var retentionDate = java.time.LocalDate.now().plusDays(properties.getStorage().getDatabase().getRetention().getDefaultDays());
+
+        var compliance = io.safeaudit.core.domain.ComplianceMetadata.builder()
+                .regulatoryTags(complianceConfig.getRegulations())
+                .retentionUntil(retentionDate)
+                .containsPII(false) // Simple default, would need sophisticated analysis
+                .build();
 
         var event = AuditEvent.builder()
                 .eventId(idGenerator.generate())
+                .sequenceNumber(sequenceNumberGenerator.next())
                 .timestamp(startTime)
-                .eventType(determineEventType(request, response))
-                .severity(determineSeverity(response.getStatus(), exception))
+                .eventType(eventType)
+                .severity(severity)
                 .ipAddress(IPAddressExtractor.extract(request))
                 .userAgent(request.getHeader("User-Agent"))
-                .resource(request.getRequestURI())
+                .resource(resource)
                 .action(request.getMethod())
                 .sessionId(request.getSession(false) != null ?
                         request.getSession(false).getId() : null)
                 .requestPayload(requestPayload)
                 .responsePayload(responsePayload)
                 .httpStatusCode(response.getStatus())
+                .compliance(compliance)
                 .capturedBy(ApplicationInfo.getFrameworkVersion())
                 .applicationName(applicationName)
                 .applicationInstance(applicationInstance)

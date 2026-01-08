@@ -16,6 +16,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class AuditAnnotationHandlerInterceptor implements HandlerInterceptor {
 
     public static final String SHOULD_AUDIT_ATTRIBUTE = "io.safeaudit.web.capture.SHOULD_AUDIT";
+    public static final String AUDITED_ANNOTATION_ATTRIBUTE = "io.safeaudit.web.capture.AUDITED_ANNOTATION";
 
     @Override
     public boolean preHandle(
@@ -25,9 +26,14 @@ public class AuditAnnotationHandlerInterceptor implements HandlerInterceptor {
 
         if (handler instanceof HandlerMethod handlerMethod) {
             var method = handlerMethod.getMethod();
-            if (method.isAnnotationPresent(Audited.class) ||
-                    handlerMethod.getBeanType().isAnnotationPresent(Audited.class)) {
+            Audited audited = method.getAnnotation(Audited.class);
+            if (audited == null) {
+                audited = handlerMethod.getBeanType().getAnnotation(Audited.class);
+            }
+
+            if (audited != null) {
                 request.setAttribute(SHOULD_AUDIT_ATTRIBUTE, true);
+                request.setAttribute(AUDITED_ANNOTATION_ATTRIBUTE, audited);
             }
         }
 

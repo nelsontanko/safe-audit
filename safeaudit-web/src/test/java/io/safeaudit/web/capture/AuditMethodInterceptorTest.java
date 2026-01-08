@@ -4,6 +4,7 @@ import io.safeaudit.core.domain.AuditEvent;
 import io.safeaudit.core.domain.enums.AuditSeverity;
 import io.safeaudit.core.spi.AuditEventCapture;
 import io.safeaudit.core.spi.AuditEventIdGenerator;
+import io.safeaudit.core.util.SequenceNumberGenerator;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,16 +39,17 @@ class AuditMethodInterceptorTest {
     private MethodSignature signature;
     @Mock
     private Audited audited;
-
-    private AuditMethodInterceptor interceptor;
-
+    @Mock
+    private SequenceNumberGenerator sequenceNumberGenerator;
     @Mock
     private Environment environment;
+
+    private AuditMethodInterceptor interceptor;
 
     @BeforeEach
     void setUp() {
         mockApplicationInfo();
-        interceptor = new AuditMethodInterceptor(eventCapture, idGenerator, applicationContext);
+        interceptor = new AuditMethodInterceptor(eventCapture, idGenerator, applicationContext, sequenceNumberGenerator);
     }
 
     private void mockApplicationInfo() {
