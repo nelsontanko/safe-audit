@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.Instant;
 
@@ -88,23 +90,22 @@ public class AuditMethodInterceptor implements Ordered {
             Audited audited,
             Instant startTime) {
 
-        // Check if we are in a web context and if auditing is handled by the filter
-        var requestAttributes = org.springframework.web.context.request.RequestContextHolder.getRequestAttributes();
-        if (requestAttributes instanceof org.springframework.web.context.request.ServletRequestAttributes servletAttributes) {
+        // Check if we are in a web context
+        var requestAttributes = RequestContextHolder.getRequestAttributes();
+        if (requestAttributes instanceof ServletRequestAttributes servletAttributes) {
             var request = servletAttributes.getRequest();
-            var shouldAudit = request.getAttribute(AuditAnnotationHandlerInterceptor.SHOULD_AUDIT_ATTRIBUTE);
-            
-            if (Boolean.TRUE.equals(shouldAudit)) {
-                // Delegate to AuditHttpFilter
-                if (audited.includeArgs()) {
-                    request.setAttribute(ARGS_ATTRIBUTE, serializeArgs(args));
-                }
-                if (audited.includeResult() && result != null) {
-                    request.setAttribute(RESULT_ATTRIBUTE, serializeResult(result));
-                }
-                // Skip direct capture
-                return;
+
+            request.setAttribute(AuditAnnotationHandlerInterceptor.SHOULD_AUDIT_ATTRIBUTE, true);
+            request.setAttribute(AuditAnnotationHandlerInterceptor.AUDITED_ANNOTATION_ATTRIBUTE, audited);
+
+            if (audited.includeArgs()) {
+                request.setAttribute(ARGS_ATTRIBUTE, serializeArgs(args));
             }
+            if (audited.includeResult() && result != null) {
+                request.setAttribute(RESULT_ATTRIBUTE, serializeResult(result));
+            }
+
+            return;
         }
 
         var eventType = audited.eventType().isBlank() ?

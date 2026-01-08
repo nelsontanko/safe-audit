@@ -15,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -126,6 +128,37 @@ class AuditMethodInterceptorTest {
         assertThat(event.eventType()).isEqualTo("TESTMETHOD"); // Uppercase method name default
         assertThat(event.severity()).isEqualTo(AuditSeverity.CRITICAL); // Exception implies CRITICAL
         assertThat(event.action()).isEqualTo("testMethod");
+    }
+
+    @Test
+    void shouldDelegateToWebFilter() throws Throwable {
+        // Given
+        var request = mock(jakarta.servlet.http.HttpServletRequest.class);
+        var attributes = new ServletRequestAttributes(request);
+        RequestContextHolder.setRequestAttributes(attributes);
+
+        when(joinPoint.getSignature()).thenReturn(signature);
+        when(joinPoint.getArgs()).thenReturn(new Object[]{"arg"});
+        when(joinPoint.proceed()).thenReturn("result");
+
+        when(audited.includeArgs()).thenReturn(true);
+        when(audited.includeResult()).thenReturn(true);
+
+        try {
+            // When
+            interceptor.auditMethod(joinPoint, audited);
+
+            // Then
+            verify(request).setAttribute(eq(AuditAnnotationHandlerInterceptor.SHOULD_AUDIT_ATTRIBUTE), eq(true));
+            verify(request).setAttribute(eq(AuditAnnotationHandlerInterceptor.AUDITED_ANNOTATION_ATTRIBUTE), eq(audited));
+            // We can't verify generic string match easily without capturing, but verifying checking for attribute set is enough
+            verify(request).setAttribute(eq(AuditMethodInterceptor.ARGS_ATTRIBUTE), anyString());
+            verify(request).setAttribute(eq(AuditMethodInterceptor.RESULT_ATTRIBUTE), anyString());
+
+            verify(eventCapture, never()).capture(any());
+        } finally {
+            RequestContextHolder.resetRequestAttributes();
+        }
     }
 
     // Helper class for reflection
