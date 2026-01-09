@@ -46,7 +46,7 @@ public abstract class AuditProcessingPipeline {
         try {
             onBeforeProcessing(rawEvent);
 
-            AuditEvent processedEvent = applyProcessors(rawEvent);
+            var processedEvent = applyProcessors(rawEvent);
 
             persistEvent(processedEvent);
 

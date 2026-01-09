@@ -1,8 +1,8 @@
 package io.safeaudit.autoconfigure;
 
-import io.safeaudit.core.compliance.CBNComplianceProfile;
-import io.safeaudit.core.compliance.NDPAComplianceProfile;
 import io.safeaudit.core.processing.AuditProcessingPipeline;
+import io.safeaudit.core.processing.compliance.CBNComplianceProfile;
+import io.safeaudit.core.processing.compliance.NDPAComplianceProfile;
 import io.safeaudit.core.spi.AuditEventCapture;
 import io.safeaudit.core.spi.AuditStorage;
 import io.safeaudit.persistence.schema.SchemaManager;

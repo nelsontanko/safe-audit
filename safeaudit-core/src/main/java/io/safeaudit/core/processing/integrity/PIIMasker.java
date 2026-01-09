@@ -1,4 +1,4 @@
-package io.safeaudit.core.processing.compliance;
+package io.safeaudit.core.processing.integrity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

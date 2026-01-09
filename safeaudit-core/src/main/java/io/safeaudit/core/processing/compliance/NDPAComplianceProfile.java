@@ -1,4 +1,4 @@
-package io.safeaudit.core.compliance;
+package io.safeaudit.core.processing.compliance;
 
 import io.safeaudit.core.domain.AuditEvent;
 import io.safeaudit.core.domain.ComplianceMetadata;

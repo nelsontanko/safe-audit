@@ -2,9 +2,9 @@ package io.safeaudit.autoconfigure;
 
 import io.safeaudit.core.processing.AsynchronousProcessingPipeline;
 import io.safeaudit.core.processing.SynchronousProcessingPipeline;
-import io.safeaudit.core.processing.compliance.PIIMasker;
 import io.safeaudit.core.processing.enrichment.CorrelationIdEnricher;
 import io.safeaudit.core.processing.enrichment.UserContextEnricher;
+import io.safeaudit.core.processing.integrity.PIIMasker;
 import io.safeaudit.core.processing.queue.VirtualThreadAuditQueue;
 import io.safeaudit.core.spi.AuditStorage;
 import io.safeaudit.persistence.schema.SchemaManager;
