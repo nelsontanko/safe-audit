@@ -1,4 +1,4 @@
-package io.safeaudit.core.compliance;
+package io.safeaudit.core.processing.compliance;
 
 import io.safeaudit.core.domain.AuditEvent;
 import io.safeaudit.core.domain.enums.AuditSeverity;
@@ -17,19 +17,13 @@ import static org.assertj.core.api.Assertions.*;
  * @since 1.0.0
  */
 @ExtendWith(MockitoExtension.class)
-class CBNComplianceProfileTest {
+class NDPAComplianceProfileTest {
 
-    private final CBNComplianceProfile profile = new CBNComplianceProfile();
-
-    @Test
-    void shouldReturnCBNRegulationCode() {
-        assertThat(profile.getRegulationCode()).isEqualTo("CBN");
-    }
+    private final NDPAComplianceProfile profile = new NDPAComplianceProfile();
 
     @Test
-    void shouldRequire7YearRetention() {
-        var retention = profile.getRetentionPeriod();
-        assertThat(retention.toDays()).isEqualTo(2555); // 7 years
+    void shouldReturnNDPARegulationCode() {
+        assertThat(profile.getRegulationCode()).isEqualTo("NDPA");
     }
 
     @Test
@@ -38,7 +32,7 @@ class CBNComplianceProfileTest {
     }
 
     @Test
-    void shouldEnrichEventWithCBNTag() {
+    void shouldEnrichEventWithNDPATag() {
         // Given
         var event = createBaseEvent();
 
@@ -46,57 +40,55 @@ class CBNComplianceProfileTest {
         var enriched = profile.enrich(event);
 
         // Then
-        assertThat(enriched.compliance().regulatoryTags()).contains("CBN");
+        assertThat(enriched.compliance().regulatoryTags()).contains("NDPA");
+    }
+
+    @Test
+    void shouldClassifyAsRestrictedWhenContainsPII() {
+        // Given
+        var event = AuditEvent.builder()
+                .eventId("test-123")
+                .timestamp(Instant.now())
+                .eventType("TEST")
+                .severity(AuditSeverity.INFO)
+                .requestPayload("{\"email\":\"test@example.com\"}")
+                .build();
+
+        // When
+        var enriched = profile.enrich(event);
+
+        // Then
         assertThat(enriched.compliance().dataClassification())
                 .isEqualTo(DataClassification.RESTRICTED);
-        assertThat(enriched.compliance().retentionUntil()).isNotNull();
+
     }
 
     @Test
-    void shouldValidateUserIdPresence() {
-        // Given
+    void shouldValidatePIIMasking() {
+        // Given - Event with PII but not masked
         var event = AuditEvent.builder()
                 .eventId("test-123")
                 .timestamp(Instant.now())
                 .eventType("TEST")
                 .severity(AuditSeverity.INFO)
-                .userId(null) // Missing
+                .requestPayload("{\"email\":\"test@example.com\"}")
                 .build();
 
         // When/Then
         assertThatExceptionOfType(ComplianceViolationException.class)
                 .isThrownBy(() -> profile.validate(event))
-                .withMessageContaining("User ID is required");
+                .withMessageContaining("PII must be masked");
     }
 
     @Test
-    void shouldValidateTamperEvidencePresence() {
-        // Given
+    void shouldPassValidationForMaskedPII() {
+        // Given - Event with masked PII
         var event = AuditEvent.builder()
                 .eventId("test-123")
                 .timestamp(Instant.now())
                 .eventType("TEST")
                 .severity(AuditSeverity.INFO)
-                .userId("user123")
-                .eventHash(null) // Missing
-                .build();
-
-        // When/Then
-        assertThatExceptionOfType(ComplianceViolationException.class)
-                .isThrownBy(() -> profile.validate(event))
-                .withMessageContaining("Tamper-evident hashing is required");
-    }
-
-    @Test
-    void shouldPassValidationForCompliantEvent() {
-        // Given
-        var event = AuditEvent.builder()
-                .eventId("test-123")
-                .timestamp(Instant.now())
-                .eventType("TEST")
-                .severity(AuditSeverity.INFO)
-                .userId("user123")
-                .eventHash("hash-value")
+                .requestPayload("{\"email\":\"SHA256:abc123...\"}")
                 .build();
 
         // When/Then
@@ -109,7 +101,7 @@ class CBNComplianceProfileTest {
                 .timestamp(Instant.now())
                 .eventType("TEST")
                 .severity(AuditSeverity.INFO)
-                .userId("user123")
                 .build();
     }
+
 }

@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.Instant;
 
@@ -35,16 +37,19 @@ public class AuditMethodInterceptor implements Ordered {
     private final ObjectMapper objectMapper;
     private final String applicationName;
     private final String applicationInstance;
+    private final io.safeaudit.core.util.SequenceNumberGenerator sequenceNumberGenerator;
 
     public AuditMethodInterceptor(
             AuditEventCapture eventCapture,
             AuditEventIdGenerator idGenerator,
-            ApplicationContext applicationContext) {
+            ApplicationContext applicationContext,
+            io.safeaudit.core.util.SequenceNumberGenerator sequenceNumberGenerator) {
         this.eventCapture = eventCapture;
         this.idGenerator = idGenerator;
         this.objectMapper = new ObjectMapper();
         this.applicationName = ApplicationInfo.getApplicationName(applicationContext);
         this.applicationInstance = ApplicationInfo.getApplicationInstance();
+        this.sequenceNumberGenerator = sequenceNumberGenerator;
     }
 
     @Override
@@ -74,6 +79,9 @@ public class AuditMethodInterceptor implements Ordered {
         }
     }
 
+    public static final String ARGS_ATTRIBUTE = "io.safeaudit.web.capture.ARGS";
+    public static final String RESULT_ATTRIBUTE = "io.safeaudit.web.capture.RESULT";
+
     private void captureMethodAudit(
             MethodSignature signature,
             Object[] args,
@@ -81,6 +89,24 @@ public class AuditMethodInterceptor implements Ordered {
             Throwable exception,
             Audited audited,
             Instant startTime) {
+
+        // Check if we are in a web context
+        var requestAttributes = RequestContextHolder.getRequestAttributes();
+        if (requestAttributes instanceof ServletRequestAttributes servletAttributes) {
+            var request = servletAttributes.getRequest();
+
+            request.setAttribute(AuditAnnotationHandlerInterceptor.SHOULD_AUDIT_ATTRIBUTE, true);
+            request.setAttribute(AuditAnnotationHandlerInterceptor.AUDITED_ANNOTATION_ATTRIBUTE, audited);
+
+            if (audited.includeArgs()) {
+                request.setAttribute(ARGS_ATTRIBUTE, serializeArgs(args));
+            }
+            if (audited.includeResult() && result != null) {
+                request.setAttribute(RESULT_ATTRIBUTE, serializeResult(result));
+            }
+
+            return;
+        }
 
         var eventType = audited.eventType().isBlank() ?
                 signature.getMethod().getName().toUpperCase() :
@@ -98,6 +124,7 @@ public class AuditMethodInterceptor implements Ordered {
 
         var event = AuditEvent.builder()
                 .eventId(idGenerator.generate())
+                .sequenceNumber(sequenceNumberGenerator.next())
                 .timestamp(startTime)
                 .eventType(eventType)
                 .severity(exception != null ? CRITICAL : audited.severity())

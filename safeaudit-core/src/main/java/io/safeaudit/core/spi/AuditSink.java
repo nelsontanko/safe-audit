@@ -31,7 +31,7 @@ public interface AuditSink {
      */
     default int sendBatch(List<AuditEvent> events) {
         int sent = 0;
-        for (AuditEvent event : events) {
+        for (var event : events) {
             if (send(event)) {
                 sent++;
             }

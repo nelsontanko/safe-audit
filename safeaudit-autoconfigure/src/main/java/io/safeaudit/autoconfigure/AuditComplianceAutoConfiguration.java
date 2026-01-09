@@ -1,9 +1,10 @@
 package io.safeaudit.autoconfigure;
 
-import io.safeaudit.core.compliance.CBNComplianceProfile;
-import io.safeaudit.core.compliance.ComplianceProfile;
-import io.safeaudit.core.compliance.NDPAComplianceProfile;
 import io.safeaudit.core.config.AuditProperties;
+import io.safeaudit.core.processing.compliance.CBNComplianceProfile;
+import io.safeaudit.core.processing.compliance.ComplianceProcessor;
+import io.safeaudit.core.processing.compliance.ComplianceProfile;
+import io.safeaudit.core.processing.compliance.NDPAComplianceProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -11,6 +12,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,6 +23,18 @@ import java.util.Set;
 public class AuditComplianceAutoConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(AuditComplianceAutoConfiguration.class);
+
+    /**
+     * Compliance processor.
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public ComplianceProcessor complianceProcessor(
+            List<ComplianceProfile> profiles,
+            AuditProperties properties) {
+        return new ComplianceProcessor(profiles, properties);
+    }
+
 
     /**
      * CBN (Central Bank of Nigeria) compliance profile.

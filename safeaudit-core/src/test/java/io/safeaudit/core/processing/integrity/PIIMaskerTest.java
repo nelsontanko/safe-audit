@@ -1,4 +1,4 @@
-package io.safeaudit.core.processing.compliance;
+package io.safeaudit.core.processing.integrity;
 
 import io.safeaudit.core.config.AuditProperties;
 import io.safeaudit.core.domain.AuditEvent;

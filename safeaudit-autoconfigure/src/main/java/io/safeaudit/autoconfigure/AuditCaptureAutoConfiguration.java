@@ -4,6 +4,7 @@ import io.safeaudit.core.config.AuditProperties;
 import io.safeaudit.core.processing.AuditProcessingPipeline;
 import io.safeaudit.core.spi.AuditEventCapture;
 import io.safeaudit.core.spi.AuditEventIdGenerator;
+import io.safeaudit.core.util.SequenceNumberGenerator;
 import io.safeaudit.web.capture.AuditAnnotationHandlerInterceptor;
 import io.safeaudit.web.capture.AuditHttpFilter;
 import io.safeaudit.web.capture.AuditMethodInterceptor;
@@ -19,6 +20,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
+import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -55,7 +57,8 @@ public class AuditCaptureAutoConfiguration {
             AuditEventCapture eventCapture,
             AuditProperties properties,
             AuditEventIdGenerator idGenerator,
-            ApplicationContext applicationContext) {
+            ApplicationContext applicationContext,
+            SequenceNumberGenerator sequenceNumberGenerator) {
 
         log.info("Registering HTTP audit filter");
 
@@ -63,7 +66,8 @@ public class AuditCaptureAutoConfiguration {
                 eventCapture,
                 properties,
                 idGenerator,
-                applicationContext
+                applicationContext,
+                sequenceNumberGenerator
         );
 
         var registration = new FilterRegistrationBean<>(filter);
@@ -87,10 +91,11 @@ public class AuditCaptureAutoConfiguration {
     public AuditMethodInterceptor auditMethodInterceptor(
             AuditEventCapture eventCapture,
             AuditEventIdGenerator idGenerator,
-            ApplicationContext applicationContext) {
+            ApplicationContext applicationContext,
+            SequenceNumberGenerator sequenceNumberGenerator) {
 
         log.info("Registering @Audited method interceptor");
-        return new AuditMethodInterceptor(eventCapture, idGenerator, applicationContext);
+        return new AuditMethodInterceptor(eventCapture, idGenerator, applicationContext, sequenceNumberGenerator);
     }
 
     /**
@@ -106,7 +111,7 @@ public class AuditCaptureAutoConfiguration {
     public WebMvcConfigurer auditAnnotationInterceptorConfigurer() {
         return new WebMvcConfigurer() {
             @Override
-            public void addInterceptors(InterceptorRegistry registry) {
+            public void addInterceptors(@NonNull InterceptorRegistry registry) {
                 registry.addInterceptor(new AuditAnnotationHandlerInterceptor());
             }
         };

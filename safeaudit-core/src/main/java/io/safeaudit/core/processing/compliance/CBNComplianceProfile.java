@@ -1,4 +1,4 @@
-package io.safeaudit.core.compliance;
+package io.safeaudit.core.processing.compliance;
 
 import io.safeaudit.core.domain.AuditEvent;
 import io.safeaudit.core.domain.ComplianceMetadata;
@@ -9,7 +9,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Set;
 
-import static io.safeaudit.core.compliance.NDPAComplianceProfile.getAuditEvent;
+import static io.safeaudit.core.processing.compliance.NDPAComplianceProfile.getAuditEvent;
 
 /**
  * Central Bank of Nigeria (CBN) compliance profile.
