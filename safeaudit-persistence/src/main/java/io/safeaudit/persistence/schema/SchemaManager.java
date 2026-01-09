@@ -2,6 +2,7 @@ package io.safeaudit.persistence.schema;
 
 import io.safeaudit.core.config.AuditProperties;
 import io.safeaudit.core.exception.AuditConfigurationException;
+import io.safeaudit.persistence.PersistenceConstants;
 import io.safeaudit.persistence.dialect.SqlDialect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,6 @@ import java.sql.ResultSet;
 public class SchemaManager {
 
     private static final Logger log = LoggerFactory.getLogger(SchemaManager.class);
-    private static final String DEFAULT_TABLE_NAME = "audit_events";
 
     private final JdbcTemplate jdbcTemplate;
     private final SqlDialect dialect;
@@ -32,7 +32,7 @@ public class SchemaManager {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.dialect = dialect;
         this.properties = properties;
-        this.tableName = DEFAULT_TABLE_NAME;
+        this.tableName = PersistenceConstants.DEFAULT_TABLE_NAME;
     }
 
     /**

@@ -11,6 +11,7 @@ import io.safeaudit.core.spi.AuditStorage;
 import io.safeaudit.core.spi.IntegrityReport;
 import io.safeaudit.core.spi.IntegrityReport.IntegrityViolation;
 import io.safeaudit.core.spi.QueryCriteria;
+import io.safeaudit.persistence.PersistenceConstants;
 import io.safeaudit.persistence.dialect.SqlDialect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,6 @@ import java.util.concurrent.atomic.AtomicLong;
 public class JdbcAuditStorage implements AuditStorage {
 
     private static final Logger log = LoggerFactory.getLogger(JdbcAuditStorage.class);
-    private static final String DEFAULT_TABLE_NAME = "audit_events";
 
     private final JdbcTemplate jdbcTemplate;
     private final SqlDialect dialect;
@@ -43,7 +43,7 @@ public class JdbcAuditStorage implements AuditStorage {
     private final AuditEventRowMapper rowMapper;
 
     public JdbcAuditStorage(DataSource dataSource, SqlDialect dialect) {
-        this(dataSource, dialect, DEFAULT_TABLE_NAME);
+        this(dataSource, dialect, PersistenceConstants.DEFAULT_TABLE_NAME);
     }
 
     public JdbcAuditStorage(DataSource dataSource, SqlDialect dialect, String tableName) {

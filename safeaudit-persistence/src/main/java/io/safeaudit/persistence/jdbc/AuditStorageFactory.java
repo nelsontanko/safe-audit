@@ -67,7 +67,6 @@ public final class AuditStorageFactory {
                 return DatabaseType.H2;
             }
             var productName = metaData.getDatabaseProductName();
-//            var productVersion = metaData.getDatabaseProductVersion();
 
             log.info("Database detected: {}", productName);
 

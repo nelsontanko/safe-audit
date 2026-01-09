@@ -1,6 +1,7 @@
 package io.safeaudit.persistence.retention;
 
 import io.safeaudit.core.config.AuditProperties;
+import io.safeaudit.persistence.PersistenceConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,7 +17,6 @@ import java.time.LocalDate;
 public class RetentionPolicy {
 
     private static final Logger log = LoggerFactory.getLogger(RetentionPolicy.class);
-    private static final String DEFAULT_TABLE_NAME = "audit_events";
 
     private final JdbcTemplate jdbcTemplate;
     private final AuditProperties.RetentionConfig config;
@@ -29,7 +29,7 @@ public class RetentionPolicy {
     RetentionPolicy(JdbcTemplate jdbcTemplate, AuditProperties properties) {
         this.jdbcTemplate = jdbcTemplate;
         this.config = properties.getStorage().getDatabase().getRetention();
-        this.tableName = DEFAULT_TABLE_NAME;
+        this.tableName = PersistenceConstants.DEFAULT_TABLE_NAME;
     }
 
     /**

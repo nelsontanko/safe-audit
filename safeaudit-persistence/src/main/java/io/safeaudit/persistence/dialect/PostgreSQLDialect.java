@@ -4,7 +4,7 @@ package io.safeaudit.persistence.dialect;
  * @author Nelson Tanko
  * @since 1.0.0
  */
-public class PostgreSQLDialect implements SqlDialect {
+public class PostgreSQLDialect extends AbstractSqlDialect {
 
     @Override
     public String getDatabaseType() {
@@ -90,39 +90,6 @@ public class PostgreSQLDialect implements SqlDialect {
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?::inet, ?, ?, ?, ?, ?, ?, ?, ?, ?::text[], ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT (event_id, partition_key) DO NOTHING
                 """.formatted(tableName);
-    }
-
-    @Override
-    public String selectByIdSQL(String tableName) {
-        return "SELECT * FROM %s WHERE event_id = ?".formatted(tableName);
-    }
-
-    @Override
-    public String countSQL(String tableName, boolean hasWhere) {
-        return "SELECT COUNT(*) FROM %s %s".formatted(tableName, hasWhere ? "WHERE" : "");
-    }
-
-    @Override
-    public String selectSQL(String tableName, String whereClause, String orderBy, int limit, int offset) {
-        var sql = new StringBuilder("SELECT * FROM ").append(tableName);
-
-        if (whereClause != null && !whereClause.isBlank()) {
-            sql.append(" WHERE ").append(whereClause);
-        }
-
-        if (orderBy != null && !orderBy.isBlank()) {
-            sql.append(" ORDER BY ").append(orderBy);
-        }
-
-        if (limit > 0) {
-            sql.append(" LIMIT ").append(limit);
-        }
-
-        if (offset > 0) {
-            sql.append(" OFFSET ").append(offset);
-        }
-
-        return sql.toString();
     }
 
     @Override

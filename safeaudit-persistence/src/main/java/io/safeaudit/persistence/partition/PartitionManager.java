@@ -1,6 +1,7 @@
 package io.safeaudit.persistence.partition;
 
 import io.safeaudit.core.config.AuditProperties;
+import io.safeaudit.persistence.PersistenceConstants;
 import io.safeaudit.persistence.dialect.SqlDialect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,6 @@ import java.util.List;
 public class PartitionManager {
 
     private static final Logger log = LoggerFactory.getLogger(PartitionManager.class);
-    private static final String DEFAULT_TABLE_NAME = "audit_events";
 
     private final JdbcTemplate jdbcTemplate;
     private final SqlDialect dialect;
@@ -43,7 +43,7 @@ public class PartitionManager {
         this.jdbcTemplate = jdbcTemplate;
         this.dialect = dialect;
         this.config = properties.getStorage().getDatabase().getPartitioning();
-        this.tableName = DEFAULT_TABLE_NAME;
+        this.tableName = PersistenceConstants.DEFAULT_TABLE_NAME;
     }
 
     /**
