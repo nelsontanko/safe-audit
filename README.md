@@ -5,7 +5,7 @@ capturing of user actions, secure storage with integrity checks, and a built-in 
 
 ## Features
 
-- **🛡️ Secure & Compliant**: Implements PII masking, cryptographic chaining for log integrity, and configurable
+- **👿 Secure & Compliant**: Implements PII masking, cryptographic chaining for log integrity, and configurable
   retention policies.
 - **🚀 High Performance**: Asynchronous event processing with batching support to minimize impact on application latency.
 - **🔌 Auto-Configuration**: Seamless integration with Spring Boot - just add the starter dependency.
@@ -41,7 +41,7 @@ Add the SafeAudit starter to your project's `pom.xml`:
 <dependency>
     <groupId>io.safeaudit</groupId>
     <artifactId>safeaudit-starter</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -173,3 +173,6 @@ been tampered with or deleted. Violations are logged and can be viewed in the cr
 
 ---
 
+## License
+
+Please refer to the [LICENSE](https://github.com/nelsontanko/safe-audit/blob/main/LICENSE)。
