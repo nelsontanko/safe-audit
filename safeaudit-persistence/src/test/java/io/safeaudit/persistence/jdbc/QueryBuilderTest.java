@@ -1,7 +1,7 @@
 package io.safeaudit.persistence.jdbc;
 
+import io.safeaudit.core.domain.QueryCriteria;
 import io.safeaudit.core.domain.enums.AuditSeverity;
-import io.safeaudit.core.spi.QueryCriteria;
 import io.safeaudit.persistence.dialect.PostgreSQLDialect;
 import io.safeaudit.persistence.dialect.SqlDialect;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,9 +1,9 @@
 package io.safeaudit.web.api;
 
 import io.safeaudit.core.domain.AuditEvent;
+import io.safeaudit.core.domain.QueryCriteria;
 import io.safeaudit.core.domain.enums.AuditSeverity;
 import io.safeaudit.core.spi.AuditStorage;
-import io.safeaudit.core.spi.QueryCriteria;
 import io.safeaudit.web.export.CSVExporter;
 import io.safeaudit.web.export.PDFExporter;
 import org.junit.jupiter.api.Test;

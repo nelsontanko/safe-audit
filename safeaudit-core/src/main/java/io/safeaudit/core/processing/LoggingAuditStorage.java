@@ -1,7 +1,10 @@
-package io.safeaudit.core.spi;
+package io.safeaudit.core.processing;
 
 import io.safeaudit.core.domain.AuditEvent;
 import io.safeaudit.core.domain.HealthStatus;
+import io.safeaudit.core.domain.IntegrityReport;
+import io.safeaudit.core.domain.QueryCriteria;
+import io.safeaudit.core.spi.AuditStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

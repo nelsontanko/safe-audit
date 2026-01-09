@@ -124,7 +124,7 @@ public class VirtualThreadAuditQueue {
             if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
                 executor.shutdownNow();
             }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException _) {
             executor.shutdownNow();
             Thread.currentThread().interrupt();
         }

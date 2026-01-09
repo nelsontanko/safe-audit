@@ -1,6 +1,7 @@
 package io.safeaudit.autoconfigure;
 
 import io.safeaudit.core.config.AuditProperties;
+import io.safeaudit.core.processing.LoggingAuditStorage;
 import io.safeaudit.core.spi.AuditStorage;
 import io.safeaudit.persistence.dialect.SqlDialect;
 import io.safeaudit.persistence.jdbc.AuditStorageFactory;
@@ -64,7 +65,7 @@ public class AuditStorageAutoConfiguration {
     @ConditionalOnMissingBean(AuditStorage.class)
     public AuditStorage loggingAuditStorage() {
         log.info("Creating fallback Logging audit storage");
-        return new io.safeaudit.core.spi.LoggingAuditStorage();
+        return new LoggingAuditStorage();
     }
 
     /**

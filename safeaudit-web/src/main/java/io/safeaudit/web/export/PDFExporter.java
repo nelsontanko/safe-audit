@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -41,7 +42,7 @@ public class PDFExporter {
 
             addFooter(document);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error("Failed to generate PDF", e);
             throw new RuntimeException("PDF generation failed", e);
         }
@@ -122,7 +123,7 @@ public class PDFExporter {
     private void addFooter(Document document) {
         document.add(new Paragraph("\n"));
         Paragraph footer = new Paragraph(
-                String.format("Generated on %s by NG Audit Framework",
+                String.format("Generated on %s by Audit Framework",
                         LocalDate.now().format(DateTimeFormatter.ISO_DATE)))
                 .setFontSize(9)
                 .setTextAlignment(TextAlignment.CENTER);

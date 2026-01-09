@@ -1,9 +1,9 @@
 package io.safeaudit.web.api;
 
 import io.safeaudit.core.config.AuditProperties;
+import io.safeaudit.core.domain.QueryCriteria;
 import io.safeaudit.core.domain.enums.AuditSeverity;
 import io.safeaudit.core.spi.AuditStorage;
-import io.safeaudit.core.spi.QueryCriteria;
 import io.safeaudit.web.dto.AuditEventDTO;
 import io.safeaudit.web.dto.AuditStatsDTO;
 import io.safeaudit.web.dto.PageDTO;

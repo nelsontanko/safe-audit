@@ -2,6 +2,8 @@ package io.safeaudit.core.spi;
 
 import io.safeaudit.core.domain.AuditEvent;
 import io.safeaudit.core.domain.HealthStatus;
+import io.safeaudit.core.domain.IntegrityReport;
+import io.safeaudit.core.domain.QueryCriteria;
 import io.safeaudit.core.exception.AuditStorageException;
 
 import java.time.Instant;

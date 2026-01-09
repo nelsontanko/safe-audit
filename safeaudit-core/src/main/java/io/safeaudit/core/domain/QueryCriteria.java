@@ -1,4 +1,4 @@
-package io.safeaudit.core.spi;
+package io.safeaudit.core.domain;
 
 import io.safeaudit.core.domain.enums.AuditSeverity;
 

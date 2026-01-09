@@ -1,16 +1,12 @@
 package io.safeaudit.persistence.jdbc;
 
-import io.safeaudit.core.domain.AuditEvent;
-import io.safeaudit.core.domain.ComplianceMetadata;
-import io.safeaudit.core.domain.HealthStatus;
+import io.safeaudit.core.domain.*;
+import io.safeaudit.core.domain.IntegrityReport.IntegrityViolation;
 import io.safeaudit.core.domain.enums.AuditSeverity;
 import io.safeaudit.core.domain.enums.DataClassification;
 import io.safeaudit.core.exception.AuditStorageException;
 import io.safeaudit.core.exception.TransientStorageException;
 import io.safeaudit.core.spi.AuditStorage;
-import io.safeaudit.core.spi.IntegrityReport;
-import io.safeaudit.core.spi.IntegrityReport.IntegrityViolation;
-import io.safeaudit.core.spi.QueryCriteria;
 import io.safeaudit.persistence.PersistenceConstants;
 import io.safeaudit.persistence.dialect.SqlDialect;
 import org.slf4j.Logger;

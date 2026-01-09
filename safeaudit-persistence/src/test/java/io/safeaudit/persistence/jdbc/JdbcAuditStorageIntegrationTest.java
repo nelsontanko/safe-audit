@@ -2,8 +2,8 @@ package io.safeaudit.persistence.jdbc;
 
 import io.safeaudit.core.domain.AuditEvent;
 import io.safeaudit.core.domain.ComplianceMetadata;
+import io.safeaudit.core.domain.QueryCriteria;
 import io.safeaudit.core.domain.enums.AuditSeverity;
-import io.safeaudit.core.spi.QueryCriteria;
 import io.safeaudit.persistence.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
