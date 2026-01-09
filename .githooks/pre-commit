@@ -1,0 +1,16 @@
+#!/bin/sh
+
+echo "Running pre-commit hook..."
+
+echo "--- Compiling and Running Unit Tests ---"
+./mvnw test
+if [ $? -ne 0 ]; then
+    echo "--------------------------"
+    echo " 👿 BUILD OR TESTS FAILED"
+    echo " Aborting commit."
+    echo "--------------------------"
+    exit 1
+fi
+
+echo "All tests passed. Proceeding with commit. 🎉"
+exit 0
