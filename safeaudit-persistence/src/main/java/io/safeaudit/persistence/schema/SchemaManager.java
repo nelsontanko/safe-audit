@@ -86,6 +86,12 @@ public class SchemaManager {
                 }
             }
 
+            var triggerSQL = dialect.createTriggerSQL(tableName);
+            if (triggerSQL != null && !triggerSQL.isBlank()) {
+                jdbcTemplate.execute(triggerSQL);
+                log.info("Initialized triggers for table '{}'", tableName);
+            }
+
             log.info("Audit table '{}' created successfully", tableName);
         } catch (Exception e) {
             throw new AuditConfigurationException("Failed to create audit table", e);

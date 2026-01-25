@@ -50,6 +50,14 @@ class AuditStorageAutoConfigurationTest {
     }
 
     @Test
+    void shouldCreatePartitionManagerByDefault() {
+        contextRunner.withUserConfiguration(DataSourceConfiguration.class)
+                .run(context -> {
+                    assertThat(context).hasSingleBean(PartitionManager.class);
+                });
+    }
+
+    @Test
     void shouldCreateRetentionPolicyWhenEnabled() {
         contextRunner.withUserConfiguration(DataSourceConfiguration.class)
                 .withPropertyValues("audit.storage.database.retention.enabled=true")

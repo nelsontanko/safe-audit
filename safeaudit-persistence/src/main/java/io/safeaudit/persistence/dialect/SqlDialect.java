@@ -22,6 +22,11 @@ public interface SqlDialect {
     String createPartitionDDL(String tableName, String partitionName, String fromValue, String toValue);
 
     /**
+     * Generate trigger creation SQL (if supported).
+     */
+    String createTriggerSQL(String tableName);
+
+    /**
      * Generate insert statement.
      */
     String insertSQL(String tableName);

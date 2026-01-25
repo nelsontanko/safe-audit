@@ -23,7 +23,7 @@ public class PostgreSQLDialect extends AbstractSqlDialect {
                 
                     user_id VARCHAR(255),
                     username VARCHAR(255),
-                    ip_address INET,
+                    ip_address VARCHAR(45),
                     user_agent TEXT,
                 
                     resource VARCHAR(500) NOT NULL,
@@ -47,8 +47,7 @@ public class PostgreSQLDialect extends AbstractSqlDialect {
                     application_name VARCHAR(255) NOT NULL,
                     application_instance VARCHAR(255),
                 
-                    partition_key DATE NOT NULL GENERATED ALWAYS AS (DATE(event_timestamp)) STORED,
-                
+                    partition_key DATE NOT NULL,
                     PRIMARY KEY (event_id, partition_key),
                     CONSTRAINT uk_sequence_per_instance UNIQUE (sequence_number, application_instance, partition_key)
                 ) PARTITION BY RANGE (partition_key);
@@ -65,6 +64,28 @@ public class PostgreSQLDialect extends AbstractSqlDialect {
                 tableName, tableName,
                 tableName, tableName,
                 tableName, tableName
+        );
+    }
+
+    @Override
+    public String createTriggerSQL(String tableName) {
+        return """
+                CREATE OR REPLACE FUNCTION set_%s_partition_key()
+                RETURNS TRIGGER AS $$
+                BEGIN
+                    NEW.partition_key = NEW.event_timestamp::DATE;
+                    RETURN NEW;
+                END;
+                $$ LANGUAGE plpgsql;
+                
+                DROP TRIGGER IF EXISTS trg_set_%s_partition_key ON %s;
+                CREATE TRIGGER trg_set_%s_partition_key
+                BEFORE INSERT ON %s
+                FOR EACH ROW
+                EXECUTE FUNCTION set_%s_partition_key();
+                """.formatted(
+                tableName, tableName, tableName,
+                tableName, tableName, tableName
         );
     }
 
@@ -87,7 +108,7 @@ public class PostgreSQLDialect extends AbstractSqlDialect {
                     compliance_tags, data_classification, retention_until, contains_pii,
                     previous_event_hash, event_hash,
                     captured_by, application_name, application_instance
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?::inet, ?, ?, ?, ?, ?, ?, ?, ?, ?::text[], ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::text[], ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT (event_id, partition_key) DO NOTHING
                 """.formatted(tableName);
     }

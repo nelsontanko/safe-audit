@@ -14,6 +14,11 @@ public abstract class AbstractSqlDialect implements SqlDialect {
     }
 
     @Override
+    public String createTriggerSQL(String tableName) {
+        return null;
+    }
+
+    @Override
     public String countSQL(String tableName, boolean hasWhere) {
         return "SELECT COUNT(*) FROM %s %s".formatted(tableName, hasWhere ? "WHERE" : "");
     }

@@ -90,7 +90,8 @@ public class AuditStorageAutoConfiguration {
     @ConditionalOnProperty(
             prefix = "audit.storage.database.partitioning",
             name = "enabled",
-            havingValue = "true")
+            havingValue = "true",
+            matchIfMissing = true)
     public PartitionManager partitionManager(
             DataSource dataSource,
             SqlDialect dialect,
